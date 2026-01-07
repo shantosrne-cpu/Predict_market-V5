@@ -1,0 +1,31 @@
+# main.py
+from fastapi import FastAPI
+from contextlib import asynccontextmanager
+from services.trading_engine import TradingEngine
+import logging
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s [%(name)s] %(levelname)s %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S"
+)
+logger = logging.getLogger("⚡ METAL ⚡")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    logger.info("Iniciando servidor API en http://127.0.0.1:8081")
+    app.state.engines = {}
+    app.state.engines["BTCUSDT"] = TradingEngine("BTCUSDT", timeframe="5m", capital=10000)
+    app.state.engines["BTCUSDT"].start()  # Síncrono por ahora
+    yield
+    logger.info("Apagando servidor API...")
+    for engine in app.state.engines.values():
+        engine.stop()
+
+app = FastAPI(lifespan=lifespan)
+
+@app.get("/health")
+async def health_check():
+    return {"status": "ok"}
+
+# Agrega tus otros endpoints aquí (como los de routes.py)

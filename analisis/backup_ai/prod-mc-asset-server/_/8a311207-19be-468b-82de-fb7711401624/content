@@ -1,0 +1,141 @@
+import hashlib
+import hmac
+import json
+import os
+from datetime import datetime, timezone
+from typing import List, Dict
+import numpy as np
+import logging
+from functools import lru_cache
+
+logger = logging.getLogger ("NertzMetalEngine")
+
+
+def calculate_metrics (candle_data: List [Dict], orderbook_data: Dict, ticker_data: Dict, depth: int = 5) -> Dict:
+    """Calcula métricas de trading basadas en velas, orderbook y ticker.
+
+    Args:
+        candle_data: Lista de diccionarios con datos de velas (open, high, low, close, volume).
+        orderbook_data: Diccionario con bids y asks del orderbook.
+        ticker_data: Diccionario con datos del ticker (last_price).
+        depth: Profundidad del orderbook a considerar.
+
+    Returns:
+        Dict con métricas calculadas: combined, ild, egm, rol, pio, ogm.
+    """
+    if not all ([candle_data, len (candle_data) >= 2, orderbook_data.get ("bids"),
+                 orderbook_data.get ("asks"), ticker_data.get ("last_price")]):
+        logger.warning ("Datos insuficientes para calcular métricas")
+        return {"combined": 0.0, "ild": 0.0, "egm": 0.0, "rol": 0.0, "pio": 0.0, "ogm": 0.0}
+
+    try:
+        last_price = float (ticker_data ["last_price"])
+
+        if all (float (c.get ("volume", 0)) <= 0.0001 for c in candle_data):
+            logger.warning ("⚠️ Volumen insuficiente, usando datos simulados")
+            candle_data = [
+                {"open": last_price, "high": last_price * 1.001, "low": last_price * 0.999,
+                 "close": last_price * 1.0005, "volume": 150.0},
+                {"open": last_price * 1.0005, "high": last_price * 1.002, "low": last_price * 0.998,
+                 "close": last_price * 1.001, "volume": 200.0},
+            ]
+
+        closes = np.array ([float (c ["close"]) for c in candle_data], dtype=np.float64)
+        highs = np.array ([float (c ["high"]) for c in candle_data], dtype=np.float64)
+        lows = np.array ([float (c ["low"]) for c in candle_data], dtype=np.float64)
+        volumes = np.array ([float (c ["volume"]) for c in candle_data], dtype=np.float64)
+
+        avg_price = np.mean (closes)
+        price_range = max (highs.max () - lows.min (), 1e-8)
+
+        bids = orderbook_data ["bids"] [:depth]
+        asks = orderbook_data ["asks"] [:depth]
+        bid_volume = sum (float (bid [1]) for bid in bids)
+        ask_volume = sum (float (ask [1]) for ask in asks)
+        total_volume = bid_volume + ask_volume + 1e-6
+        ild = (bid_volume - ask_volume) / total_volume
+
+        egm = np.clip ((last_price - avg_price) / price_range, -1.0, 1.0)
+
+        bid_value = sum (float (bid [0]) * float (bid [1]) for bid in bids)
+        ask_value = sum (float (ask [0]) * float (ask [1]) for ask in asks)
+        total_value = bid_value + ask_value + 1e-6
+        rol = (bid_value - ask_value) / total_value
+
+        pio = 0.0
+        if len (volumes) >= 2:
+            avg_volume = np.mean (volumes [:-1])
+            pio = np.clip ((volumes [0] - avg_volume) / (avg_volume + 1e-6), -1.0, 1.0)
+
+        best_bid = float (bids [0] [0]) if bids else last_price
+        best_ask = float (asks [0] [0]) if asks else last_price
+        spread = (best_ask - best_bid) / last_price
+        ogm = 1.0 - np.clip (spread / 0.02, 0, 1.0)
+
+        combined = np.clip ((0.3 * ild + 0.2 * egm + 0.2 * rol + 0.2 * pio + 0.1 * ogm) * 100, -100.0, 100.0)
+
+        logger.debug (
+            f"Métricas: combined={combined:.2f}, ild={ild:.4f}, egm={egm:.4f}, rol={rol:.4f}, pio={pio:.4f}, ogm={ogm:.4f}")
+        return {
+            "combined": float (combined),
+            "ild": float (ild),
+            "egm": float (egm),
+            "rol": float (rol),
+            "pio": float (pio),
+            "ogm": float (ogm)
+        }
+
+    except Exception as e:
+        logger.error (f"Error en calculate_metrics: {e}", exc_info=True)
+        return {"combined": 0.0, "ild": 0.0, "egm": 0.0, "rol": 0.0, "pio": 0.0, "ogm": 0.0}
+
+
+def generate_signature (api_secret: str, params: dict) -> str:
+    sorted_params = "&".join ([f"{k}={v}" for k, v in sorted (params.items ())])
+    return hmac.new (api_secret.encode (), sorted_params.encode (), hashlib.sha256).hexdigest ()
+
+
+def sanitize_filename (filename: str) -> str:
+    return os.path.basename (filename)
+
+
+def save_results (results: dict, log_dir: str = "logs", consolidate: bool = True, max_files: int = 1) -> None:
+    log_dir = os.path.abspath (log_dir)
+    os.makedirs (log_dir, exist_ok=True)
+    if consolidate:
+        filename = "results_consolidated.json"
+    else:
+        timestamp = datetime.now (timezone.utc).strftime ("%Y%m%d_%H%M%S")
+        filename = sanitize_filename (f"results_{timestamp}.json")
+    filepath = os.path.join (log_dir, filename)
+    if os.path.exists (filepath):
+        with open (filepath, "r", encoding="utf-8") as f:
+            existing_results = json.load (f)
+    else:
+        existing_results = {
+            "metadata": {"timestamp": "", "capital_inicial": 0.0, "capital_actual": 0.0, "capital_final": 0.0,
+                         "total_pnl": 0.0, "total_trades": 0, "iterations": 0, "running": False},
+            "summary": {"total_profit": 0.0, "total_loss": 0.0, "net_profit": 0.0, "win_rate": 0.0,
+                        "avg_profit_per_trade": 0.0},
+            "by_symbol": {},
+            "trades": {}
+        }
+    existing_results ["metadata"] = results.get ("metadata", existing_results ["metadata"])
+    existing_results ["summary"] = results.get ("summary", existing_results ["summary"])
+    existing_results ["by_symbol"] = results.get ("by_symbol", existing_results ["by_symbol"])
+    new_trades = results.get ("trades", {})
+    for symbol, trades in new_trades.items ():
+        if symbol not in existing_results ["trades"]:
+            existing_results ["trades"] [symbol] = []
+        existing_results ["trades"] [symbol].extend (trades)
+    with open (filepath, "w", encoding="utf-8") as f:
+        json.dump (existing_results, f, indent=4)
+    logger.info (f"📈 Resultados guardados en {filepath}")
+    if consolidate and max_files == 1:
+        files = [f for f in os.listdir (log_dir) if f.startswith ("results_") and f != "results_consolidated.json"]
+        for file in files:
+            os.remove (os.path.join (log_dir, file))
+
+
+def timestamp_to_datetime (timestamp_ms: int) -> datetime:
+    return datetime.fromtimestamp (timestamp_ms / 1000, tz=timezone.utc)

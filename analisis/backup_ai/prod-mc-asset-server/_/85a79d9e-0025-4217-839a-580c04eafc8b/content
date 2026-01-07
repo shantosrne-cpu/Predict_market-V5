@@ -1,0 +1,37 @@
+{
+    "metadata": {
+        "timestamp": "2025-03-10T07:27:04.146285+00:00",
+        "capital_inicial": 50000.0,
+        "capital_actual": 50000.0,
+        "capital_final": 50000.0,
+        "total_pnl": 0.0,
+        "total_trades": 0,
+        "iterations": 1,
+        "running": true
+    },
+    "summary": {
+        "total_profit": 0.0,
+        "total_loss": 0.0,
+        "net_profit": 0.0,
+        "win_rate": 0,
+        "avg_profit_per_trade": 0
+    },
+    "by_symbol": {
+        "BTCUSDT": {
+            "profit": 0,
+            "loss": 0,
+            "net_profit": 0,
+            "trade_count": 0
+        },
+        "ETHUSDT": {
+            "profit": 0,
+            "loss": 0,
+            "net_profit": 0,
+            "trade_count": 0
+        }
+    },
+    "trades": {
+        "BTCUSDT": [],
+        "ETHUSDT": []
+    }
+}

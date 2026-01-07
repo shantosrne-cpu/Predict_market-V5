@@ -1,0 +1,17 @@
+# Archivos y directorios de Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Entorno virtual
+.venv/
+
+# Archivos temporales de sistema operativo
+*.log
+*.sqlite3
+*.db
+
+# Configuración de PyCharm
+.idea/
+DATA/market_data.db
+DATA/logs/

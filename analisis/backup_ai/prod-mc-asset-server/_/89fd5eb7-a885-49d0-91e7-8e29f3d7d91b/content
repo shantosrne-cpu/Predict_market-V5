@@ -1,0 +1,41 @@
+import asyncio
+import threading
+import time
+import uvicorn
+from api.routes import app
+from services.trading_engine import TradingEngine
+from services.websocket import WebSocketService  # Asegúrate de que este sea el nombre correcto del archivo
+from utils.logger import logger
+
+API_PORT = 8081
+
+def run_api():
+    logger.info(f"🎸 Iniciando servidor API en http://127.0.0.1:{API_PORT}")
+    try:
+        uvicorn.run(app, host="127.0.0.1", port=API_PORT)
+    except Exception as e:
+        logger.error(f"❌ Error al iniciar el servidor API: {e}")
+
+async def run_websocket(websocket_service, engine):
+    await websocket_service.start(engine)
+
+if __name__ == "__main__":
+    websocket_service = WebSocketService()
+    global_engine = TradingEngine(websocket_service)
+    if global_engine is None:
+        logger.error("❌ Fallo al inicializar TradingEngine")
+        exit(1)
+    app.state.engine = global_engine  # Esto es clave
+    logger.info("🚀 Motor metalero de NetHz listo para rockear!")
+    ws_thread = threading.Thread(target=lambda: asyncio.run(run_websocket(websocket_service, global_engine)), daemon=True)
+    api_thread = threading.Thread(target=run_api, daemon=True)
+    ws_thread.start()
+    logger.info("🌐 Hilo de WebSocket iniciado")
+    api_thread.start()
+    logger.info("🎵 Hilo de API iniciado")
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        global_engine.stop()
+        logger.info("🛑 Programa detenido con estilo!")

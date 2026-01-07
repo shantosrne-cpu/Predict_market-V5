@@ -1,0 +1,33 @@
+import hmac
+import hashlib
+from typing import Dict
+
+
+def generate_signature (api_secret: str, params: Dict [str, str]) -> str:
+    """
+    Generate HMAC-SHA256 signature for given parameters using the provided API secret.
+
+    :param api_secret: The secret key used to generate the HMAC signature.
+    :param params: A dictionary of parameters to be included in the signature.
+    :return: The generated HMAC-SHA256 signature as a hexadecimal string.
+    """
+    try:
+        # Sort parameters by key and create a query string
+        sorted_params = "&".join ([f"{k}={v}" for k, v in sorted (params.items ())])
+        # Generate HMAC-SHA256 signature
+        signature = hmac.new (api_secret.encode (), sorted_params.encode (), hashlib.sha256).hexdigest ()
+        return signature
+    except Exception as e:
+        print (f"Error generating signature: {e}")
+        return ""
+
+
+if __name__ == "__main__":
+    # Example usage
+    example_secret = "your_api_secret"
+    example_params = {
+        "param1": "value1",
+        "param2": "value2"
+    }
+    signature = generate_signature (example_secret, example_params)
+    print (f"Generated Signature: {signature}")

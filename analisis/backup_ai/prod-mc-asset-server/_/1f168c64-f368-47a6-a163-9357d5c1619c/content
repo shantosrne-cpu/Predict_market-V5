@@ -1,0 +1,231 @@
+from datetime import datetime, timezone
+from fastapi import FastAPI, Depends, HTTPException
+from models.database import MarketData, Orderbook, MarketTicker, Trade, execute_in_db
+from services.metrics import calculate_metrics
+import services.trading_engine
+from utils.logger import logger
+
+app = FastAPI()
+
+def get_engine(symbol: str):
+    if not hasattr(app.state, 'engines') or symbol not in app.state.engines or not app.state.engines[symbol].running:
+        raise HTTPException(status_code=500, detail=f"TradingEngine para {symbol} no inicializado o no está corriendo")
+    return app.state.engines[symbol]
+
+@app.get("/market_data/{symbol}")
+async def get_market_data(symbol: str, engine: services.trading_engine.TradingEngine = Depends(get_engine)):
+    logger.info(f"📡 /market_data/{symbol}")
+    try:
+        candles = engine.candles[-5:] if engine.candles else []
+        if not candles:
+            logger.warning(f"⚠️ No se encontraron candles para {symbol} en engine.candles")
+            return {"symbol": symbol, "candles": [], "message": "No data", "timestamp": datetime.now(timezone.utc).isoformat() + "Z"}
+
+        return {
+            "symbol": symbol,
+            "candles": [
+                {
+                    "timestamp": c.timestamp.isoformat() + "Z",
+                    "open": c.open,
+                    "high": c.high,
+                    "low": c.low,
+                    "close": c.close,
+                    "volume": c.volume
+                } for c in candles
+            ],
+            "message": "",
+            "timestamp": datetime.now(timezone.utc).isoformat() + "Z"
+        }
+    except Exception as exc:
+        logger.error(f"❌ Error en /market_data: {exc}")
+        raise HTTPException(status_code=500, detail=f"Error interno: {str(exc)}")
+
+@app.get("/ticker/{symbol}")
+async def get_ticker(symbol: str, engine: services.trading_engine.TradingEngine = Depends(get_engine)):
+    logger.info(f"📡 /ticker/{symbol}")
+    try:
+        if not engine.ticker_data or "last_price" not in engine.ticker_data:
+            logger.warning(f"⚠️ No se encontró ticker para {symbol} en tiempo real")
+            return {
+                "symbol": symbol,
+                "last_price": 0.0,
+                "volume_24h": 0.0,
+                "high_24h": 0.0,
+                "low_24h": 0.0,
+                "timestamp": datetime.now(timezone.utc).isoformat() + "Z",
+                "message": "No data"
+            }
+        return {
+            "symbol": symbol,
+            "last_price": engine.ticker_data["last_price"],
+            "volume_24h": engine.ticker_data["volume_24h"],
+            "high_24h": engine.ticker_data["high_24h"],
+            "low_24h": engine.ticker_data["low_24h"],
+            "timestamp": datetime.now(timezone.utc).isoformat() + "Z"
+        }
+    except Exception as exc:
+        logger.error(f"❌ Error en /ticker: {exc}")
+        raise HTTPException(status_code=500, detail=f"Error interno: {str(exc)}")
+
+@app.get("/metrics/{symbol}")
+async def get_all_metrics(symbol: str, engine: services.trading_engine.TradingEngine = Depends(get_engine)):
+    logger.info(f"📡 /metrics/{symbol}")
+    try:
+        candle_data = engine.candles[-10:] if engine.candles else []
+        orderbook_data = engine.orderbook_data
+        ticker_data = engine.ticker_data
+        if not candle_data or not orderbook_data.get("bids") or not ticker_data.get("last_price"):
+            logger.warning(f"⚠️ Datos insuficientes para métricas en tiempo real para {symbol}")
+            return {"symbol": symbol, "metrics": {"combined": 0.0, "ild": 0.0, "egm": 0.0, "rol": 0.0, "pio": 0.0, "ogm": 0.0}, "timestamp": datetime.now(timezone.utc).isoformat() + "Z"}
+        metrics = calculate_metrics(candle_data, orderbook_data, ticker_data)
+        return {"symbol": symbol, "metrics": metrics, "timestamp": datetime.now(timezone.utc).isoformat() + "Z"}
+    except Exception as exc:
+        logger.error(f"❌ Error en /metrics: {exc}")
+        raise HTTPException(status_code=500, detail=f"Error interno: {str(exc)}")
+
+@app.get("/trades/{symbol}")
+async def get_trades(symbol: str, engine: services.trading_engine.TradingEngine = Depends(get_engine)):
+    logger.info(f"📡 /trades/{symbol}")
+    try:
+        trades = engine.positions
+        if not trades:
+            logger.warning(f"⚠️ No se encontraron trades para {symbol} en tiempo real")
+            return {"symbol": symbol, "trades": [], "timestamp": datetime.now(timezone.utc).isoformat() + "Z"}
+        return {
+            "symbol": symbol,
+            "trades": [
+                {
+                    "trade_id": t.trade_id if hasattr(t, "trade_id") else t.get("trade_id"),
+                    "timestamp": t.timestamp.isoformat() + "Z" if hasattr(t, "timestamp") else t.get("timestamp"),
+                    "action": t.action if hasattr(t, "action") else t.get("action"),
+                    "entry_price": t.entry_price if hasattr(t, "entry_price") else t.get("entry_price"),
+                    "exit_price": t.exit_price if hasattr(t, "exit_price") else t.get("exit_price"),
+                    "quantity": t.quantity if hasattr(t, "quantity") else t.get("quantity"),
+                    "profit_loss": t.profit_loss if hasattr(t, "profit_loss") else t.get("profit_loss"),
+                    "combined": t.combined if hasattr(t, "combined") else t.get("combined"),
+                    "ild": t.ild if hasattr(t, "ild") else t.get("ild"),
+                    "egm": t.egm if hasattr(t, "egm") else t.get("egm"),
+                    "rol": t.rol if hasattr(t, "rol") else t.get("rol"),
+                    "pio": t.pio if hasattr(t, "pio") else t.get("pio"),
+                    "ogm": t.ogm if hasattr(t, "ogm") else t.get("ogm"),
+                    "risk_reward_ratio": t.risk_reward_ratio if hasattr(t, "risk_reward_ratio") else t.get("risk_reward_ratio")
+                } for t in trades
+            ],
+            "timestamp": datetime.now(timezone.utc).isoformat() + "Z"
+        }
+    except Exception as exc:
+        logger.error(f"❌ Error en /trades: {exc}")
+        raise HTTPException(status_code=500, detail=f"Error interno: {str(exc)}")
+
+@app.get("/status")
+async def get_status(engine: services.trading_engine.TradingEngine = Depends(get_engine)):
+    logger.info("📡 /status")
+    try:
+        return {
+            "running": engine.running,
+            "iterations": engine.iterations,
+            "capital": engine.capital,
+            "positions_count": len(engine.positions),
+            "last_orderbook_log": engine.last_orderbook_log.isoformat() + "Z" if engine.last_orderbook_log else None,
+            "websocket_connected": engine.websocket_service.ws is not None and engine.websocket_service.ws.open if engine.websocket_service.ws else False,
+            "timestamp": datetime.now(timezone.utc).isoformat() + "Z"
+        }
+    except Exception as exc:
+        logger.error(f"❌ Error en /status: {exc}")
+        raise HTTPException(status_code=500, detail=f"Error interno: {str(exc)}")
+
+@app.get("/db_summary")
+async def get_db_summary():
+    logger.info("📡 /db_summary")
+    summary = {"candles_count": 0, "orderbooks_count": 0, "tickers_count": 0, "trades_count": 0}
+
+    def load_summary(db):
+        try:
+            summary["candles_count"] = db.query(MarketData).count()
+            summary["orderbooks_count"] = db.query(Orderbook).count()
+            summary["tickers_count"] = db.query(MarketTicker).count()
+            summary["trades_count"] = db.query(Trade).count()
+        except Exception as exc:
+            logger.error(f"❌ Error al cargar resumen de DB: {exc}")
+            raise
+
+    try:
+        await execute_in_db(load_summary)
+        return {**summary, "timestamp": datetime.now(timezone.utc).isoformat() + "Z"}
+    except Exception as exc:
+        logger.error(f"❌ Error en /db_summary: {exc}")
+        raise HTTPException(status_code=500, detail=f"Error interno: {str(exc)}")
+
+@app.get("/market_ticker/{symbol}")
+async def get_market_ticker(symbol: str, engine: services.trading_engine.TradingEngine = Depends(get_engine)):
+    logger.info(f"📡 /market_ticker/{symbol}")
+    try:
+        if not engine.ticker_data or "last_price" not in engine.ticker_data:
+            logger.warning(f"⚠️ No se encontró market_ticker para {symbol} en tiempo real")
+            return {
+                "symbol": symbol,
+                "last_price": 0.0,
+                "volume_24h": 0.0,
+                "high_24h": 0.0,
+                "low_24h": 0.0,
+                "timestamp": datetime.now(timezone.utc).isoformat() + "Z",
+                "message": "No data"
+            }
+        return {
+            "symbol": symbol,
+            "last_price": engine.ticker_data["last_price"],
+            "volume_24h": engine.ticker_data["volume_24h"],
+            "high_24h": engine.ticker_data["high_24h"],
+            "low_24h": engine.ticker_data["low_24h"],
+            "timestamp": datetime.now(timezone.utc).isoformat() + "Z"
+        }
+    except Exception as exc:
+        logger.error(f"❌ Error en /market_ticker: {exc}")
+        raise HTTPException(status_code=500, detail=f"Error interno: {str(exc)}")
+
+@app.get("/pnl/{symbol}")
+async def get_pnl(symbol: str, engine: services.trading_engine.TradingEngine = Depends(get_engine)):
+    logger.info(f"📡 /pnl/{symbol}")
+    try:
+        trades = engine.positions
+        if not trades:
+            logger.warning(f"⚠️ No se encontraron trades para {symbol} en tiempo real")
+            return {
+                "symbol": symbol,
+                "total_pnl": 0.0,
+                "trades_count": 0,
+                "message": "No trades found",
+                "timestamp": datetime.now(timezone.utc).isoformat() + "Z"
+            }
+        total_pnl = sum(t.profit_loss if hasattr(t, "profit_loss") else t.get("profit_loss", 0.0) for t in trades)
+        return {
+            "symbol": symbol,
+            "total_pnl": total_pnl,
+            "trades_count": len(trades),
+            "timestamp": datetime.now(timezone.utc).isoformat() + "Z"
+        }
+    except Exception as exc:
+        logger.error(f"❌ Error en /pnl: {exc}")
+        raise HTTPException(status_code=500, detail=f"Error interno: {str(exc)}")
+
+@app.post("/reset_trades/{symbol}")
+async def reset_trades(
+    symbol: str,
+    reset_counter: bool = False,
+    engine: services.trading_engine.TradingEngine = Depends(get_engine),
+):
+    """
+    Resetea los trades relacionados al símbolo y opcionalmente reinicia el contador de trade_id.
+    """
+    logger.info(f"📡 Solicitud para resetear trades en {symbol} con reset_counter={reset_counter}")
+
+    try:
+        engine.reset_trades(reset_counter=reset_counter)
+        return {
+            "symbol": symbol,
+            "message": f"Trades reseteados {'y contador reiniciado' if reset_counter else ''}.",
+            "timestamp": datetime.now(timezone.utc).isoformat() + "Z"
+        }
+    except Exception as exc:
+        logger.error(f"❌ Error al intentar resetear trades para {symbol}: {exc}")
+        raise HTTPException(status_code=500, detail=f"Error interno: {str(exc)}")

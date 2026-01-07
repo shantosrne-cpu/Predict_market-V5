@@ -1,0 +1,97 @@
+import queue
+import threading
+from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime, JSON
+from sqlalchemy.orm import scoped_session, sessionmaker, declarative_base
+from config.config import DATABASE_URL
+from utils.logger import logger
+
+db_queue = queue.Queue()
+engine = create_engine(
+    f"sqlite:///{DATABASE_URL}", connect_args={"check_same_thread": False}
+)
+
+Base = declarative_base()
+
+class MarketData(Base):
+    __tablename__ = "market_data"
+    id = Column(Integer, primary_key=True, index=True)
+    timestamp = Column(DateTime, index=True, nullable=False)
+    symbol = Column(String(10), nullable=False)
+    open = Column(Float, nullable=False, default=0.0)
+    high = Column(Float, nullable=False, default=0.0)
+    low = Column(Float, nullable=False, default=0.0)
+    close = Column(Float, nullable=False, default=0.0)
+    volume = Column(Float, nullable=False, default=0.0)
+
+class Orderbook(Base):
+    __tablename__ = "orderbook"
+    id = Column(Integer, primary_key=True, index=True)
+    timestamp = Column(DateTime, nullable=False, index=True)
+    symbol = Column(String(10), nullable=False, index=True)
+    bids = Column(JSON, nullable=False)
+    asks = Column(JSON, nullable=False)
+
+class MarketTicker(Base):
+    __tablename__ = "market_ticker"
+    id = Column(Integer, primary_key=True, index=True)
+    timestamp = Column(DateTime, nullable=False, index=True)
+    symbol = Column(String(10), nullable=False, index=True)
+    last_price = Column(Float, nullable=False, default=0.0)
+    volume_24h = Column(Float, nullable=False, default=0.0)
+    high_24h = Column(Float, nullable=False, default=0.0)
+    low_24h = Column(Float, nullable=False, default=0.0)
+
+class Trade(Base):
+    __tablename__ = "trades"
+    id = Column(Integer, primary_key=True, index=True)
+    trade_id = Column(Integer, nullable=False, unique=True)
+    timestamp = Column(DateTime, nullable=False, index=True)
+    symbol = Column(String(10), nullable=False, index=True)
+    action = Column(String, nullable=False)
+    entry_price = Column(Float, nullable=False, default=0.0)
+    exit_price = Column(Float, nullable=False, default=0.0)
+    quantity = Column(Float, nullable=False, default=0.0)
+    profit_loss = Column(Float, nullable=False, default=0.0)
+    decision = Column(String, nullable=False)
+    combined = Column(Float, nullable=False, default=0.0)
+    ild = Column(Float, nullable=False, default=0.0)
+    egm = Column(Float, nullable=False, default=0.0)
+    rol = Column(Float, nullable=False, default=0.0)
+    pio = Column(Float, nullable=False, default=0.0)
+    ogm = Column(Float, nullable=False, default=0.0)
+    risk_reward_ratio = Column(Float, nullable=False, default=1.5)
+
+Base.metadata.create_all(bind=engine)
+logger.info("Tablas de base de datos creadas exitosamente")
+
+SessionLocal = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
+
+def db_worker():
+    global db
+    while True:
+        func = db_queue.get()
+        if func is None:
+            logger.info("Hilo de base de datos detenido")
+            break
+        try:
+            db = SessionLocal()
+            func(db)
+        except Exception as e:
+            logger.error(f"Error en operación de base de datos: {e}")
+        finally:
+            db.close()
+            db_queue.task_done()
+
+db_thread = threading.Thread(target=db_worker, daemon=True)
+db_thread.start()
+logger.info("Hilo de base de datos iniciado")
+
+def execute_in_db(func):
+    db_queue.put(func)
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

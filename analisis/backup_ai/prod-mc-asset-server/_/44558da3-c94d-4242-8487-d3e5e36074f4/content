@@ -1,0 +1,247 @@
+import aiohttp
+import asyncio
+import json
+import websockets
+import logging
+from datetime import datetime, timezone
+from models.database import MarketData, MarketTicker, Orderbook, execute_in_db
+from utils.utils import timestamp_to_datetime, send_alert
+from services.websocket import WebSocketService
+
+logger = logging.getLogger("⚡ METAL ⚡")
+
+class TradingEngine:
+    def __init__(self, symbol: str, timeframe: str, capital: float):
+        self.symbol = symbol
+        self.timeframe = timeframe
+        self.capital = capital
+        self.candles = []
+        self.orderbook_data = {"bids": [], "asks": []}
+        self.ticker_data = {}
+        self.positions = []  # Lista de trades
+        self.ws_url = "wss://stream.bybit.com/v5/public/spot"
+        self.running = False
+        self.websocket_service = WebSocketService(self)
+        self.iterations = 0
+        self.last_orderbook_log = None
+
+    async def fetch_initial_data(self) -> None:
+        async with aiohttp.ClientSession() as session:
+            try:
+                logger.info("Fetching initial data...")
+                BASE_URL = "https://api.bybit.com"
+                kline_url = f"{BASE_URL}/v5/market/kline"
+                params = {"category": "spot", "symbol": self.symbol, "interval": self.timeframe.replace("m", ""), "limit": 10}
+                async with session.get(kline_url, params=params, timeout=10) as response:
+                    if response.status == 200:
+                        kline_response = await response.json()
+                        if "result" in kline_response and "list" in kline_response["result"]:
+                            self.candles = [
+                                MarketData(
+                                    timestamp=timestamp_to_datetime(int(k[0]) / 1000),
+                                    symbol=self.symbol,
+                                    open=float(k[1]),
+                                    high=float(k[2]),
+                                    low=float(k[3]),
+                                    close=float(k[4]),
+                                    volume=float(k[5])
+                                ) for k in kline_response["result"]["list"]
+                            ]
+                            def save_initial_candles(db):
+                                for candle in self.candles:
+                                    if not db.query(MarketData).filter(MarketData.timestamp == candle.timestamp, MarketData.symbol == self.symbol).first():
+                                        db.add(candle)
+                                db.commit()
+                            await execute_in_db(save_initial_candles)
+                            logger.info(f"Velas iniciales: {len(self.candles)}")
+                        else:
+                            logger.error(f"Kline inesperado: {kline_response}")
+                    else:
+                        logger.error(f"Error kline: {response.status} - {await response.text()}")
+
+                orderbook_url = f"{BASE_URL}/v5/market/orderbook"
+                params = {"category": "spot", "symbol": self.symbol, "limit": 100}
+                async with session.get(orderbook_url, params=params, timeout=10) as response:
+                    if response.status == 200:
+                        orderbook_response = await response.json()
+                        if "result" in orderbook_response:
+                            self.orderbook_data = {"bids": orderbook_response["result"]["b"], "asks": orderbook_response["result"]["a"]}
+                            logger.info(f"Orderbook: Bids={len(self.orderbook_data['bids'])}, Asks={len(self.orderbook_data['asks'])}")
+                            def save_orderbook(db):
+                                orderbook = Orderbook(
+                                    timestamp=datetime.now(timezone.utc),
+                                    symbol=self.symbol,
+                                    bids=self.orderbook_data["bids"],
+                                    asks=self.orderbook_data["asks"]
+                                )
+                                db.add(orderbook)
+                                db.commit()
+                            await execute_in_db(save_orderbook)
+                        else:
+                            logger.error(f"Orderbook inesperado: {orderbook_response}")
+                    else:
+                        logger.error(f"Error orderbook: {response.status} - {await response.text()}")
+
+                ticker_url = f"{BASE_URL}/v5/market/tickers"
+                params = {"category": "spot", "symbol": self.symbol}
+                async with session.get(ticker_url, params=params, timeout=10) as response:
+                    if response.status == 200:
+                        ticker_response = await response.json()
+                        if "result" in ticker_response and "list" in ticker_response["result"]:
+                            ticker_data = ticker_response["result"]["list"][0]
+                            self.ticker_data = {
+                                "last_price": float(ticker_data["lastPrice"]),
+                                "volume_24h": float(ticker_data["volume24h"]),
+                                "high_24h": float(ticker_data["highPrice24h"]),
+                                "low_24h": float(ticker_data["lowPrice24h"])
+                            }
+                            logger.info(f"Ticker inicial: {self.ticker_data['last_price']}")
+                            def save_ticker(db):
+                                ticker = MarketTicker(
+                                    timestamp=datetime.now(timezone.utc),
+                                    symbol=self.symbol,
+                                    last_price=self.ticker_data["last_price"],
+                                    volume_24h=self.ticker_data["volume_24h"],
+                                    high_24h=self.ticker_data["high_24h"],
+                                    low_24h=self.ticker_data["low_24h"]
+                                )
+                                db.add(ticker)
+                                db.commit()
+                            await execute_in_db(save_ticker)
+                        else:
+                            logger.error(f"Ticker inesperado: {ticker_response}")
+                    else:
+                        logger.error(f"Error ticker: {response.status} - {await response.text()}")
+
+            except Exception as exc:
+                logger.error(f"Fetch inicial falló: {exc}")
+                await self._load_fallback_data()
+
+    async def _load_fallback_data(self):
+        logger.info("Cargando datos de respaldo...")
+        # Implementar lógica de respaldo si es necesario
+        pass
+
+    async def start(self):
+        logger.info(f"Motor metalero iniciado para {self.symbol}")
+        await self.fetch_initial_data()
+        self.running = True
+        await self.websocket_service.start()
+
+    async def stop(self):
+        self.running = False
+        await self.websocket_service.stop()
+
+    async def run_websocket(self):
+        async with websockets.connect(self.ws_url) as ws:
+            subscription_message = {
+                "op": "subscribe",
+                "args": [f"kline.{self.timeframe}.{self.symbol}", f"orderbook.50.{self.symbol}", f"tickers.{self.symbol}"]
+            }
+            await ws.send(json.dumps(subscription_message))
+            logger.info(f"Suscripción enviada: {subscription_message}")
+            while self.running:
+                try:
+                    message = await ws.recv()
+                    data = json.loads(message)
+                    if "success" in data:
+                        logger.info("Suscripción confirmada")
+                    elif data.get("topic") == f"kline.{self.timeframe}.{self.symbol}":
+                        await self.process_kline(data["data"])
+                    elif data.get("topic") == f"orderbook.50.{self.symbol}":
+                        await self.process_orderbook(data)
+                    elif data.get("topic") == f"tickers.{self.symbol}":
+                        await self.process_ticker(data["data"])
+                except Exception as exc:
+                    logger.error(f"Error en WebSocket: {exc}")
+                    break
+
+    async def process_kline(self, data):
+        self.iterations += 1
+        kline = data
+        logger.debug(f"Kline recibido: {kline}")
+        candle = MarketData(
+            timestamp=timestamp_to_datetime(kline["start"] / 1000),  # Ajuste para Bybit
+            symbol=self.symbol,
+            open=float(kline["open"]),
+            high=float(kline["high"]),
+            low=float(kline["low"]),
+            close=float(kline["close"]),
+            volume=float(kline["volume"])
+        )
+        self.candles.append(candle)
+        if len(self.candles) > 100:
+            self.candles.pop(0)
+        def save_kline(db):
+            if not db.query(MarketData).filter(MarketData.timestamp == candle.timestamp, MarketData.symbol == self.symbol).first():
+                db.add(candle)
+            db.commit()
+        await execute_in_db(save_kline)
+
+    async def handle_kline(self, data):
+        await self.process_kline(data)
+
+    async def process_ticker(self, data):
+        self.iterations += 1
+        self.ticker_data = {
+            "last_price": float(data["lastPrice"]),
+            "volume_24h": float(data["volume24h"]),
+            "high_24h": float(data["highPrice24h"]),
+            "low_24h": float(data["lowPrice24h"])
+        }
+        usd_index_price = data.get("usdIndexPrice")
+        if usd_index_price:
+            logger.debug(f"USD Index Price: {usd_index_price}")
+        else:
+            logger.warning("USD Index Price no disponible")
+        ticker = MarketTicker(
+            timestamp=datetime.now(timezone.utc),
+            symbol=self.symbol,
+            last_price=self.ticker_data["last_price"],
+            volume_24h=self.ticker_data["volume_24h"],
+            high_24h=self.ticker_data["high_24h"],
+            low_24h=self.ticker_data["low_24h"]
+        )
+        def save_ticker(db):
+            db.add(ticker)
+            db.commit()
+        await execute_in_db(save_ticker)
+
+    async def handle_ticker(self, data):
+        await self.process_ticker(data)
+
+    async def process_orderbook(self, data):
+        self.iterations += 1
+        self.last_orderbook_log = datetime.now(timezone.utc)
+        if data["type"] == "snapshot":
+            self.orderbook_data = {"bids": data["data"]["b"], "asks": data["data"]["a"]}
+        else:  # delta
+            for bid in data["data"]["b"]:
+                price, quantity = bid
+                self.orderbook_data["bids"] = [b for b in self.orderbook_data["bids"] if b[0] != price]
+                if float(quantity) > 0:
+                    self.orderbook_data["bids"].append(bid)
+            for ask in data["data"]["a"]:
+                price, quantity = ask
+                self.orderbook_data["asks"] = [a for a in self.orderbook_data["asks"] if a[0] != price]
+                if float(quantity) > 0:
+                    self.orderbook_data["asks"].append(ask)
+        orderbook = Orderbook(
+            timestamp=datetime.now(timezone.utc),
+            symbol=self.symbol,
+            bids=self.orderbook_data["bids"],
+            asks=self.orderbook_data["asks"]
+        )
+        def save_orderbook(db):
+            db.add(orderbook)
+            db.commit()
+        await execute_in_db(save_orderbook)
+
+    async def store_orderbook(self):
+        await self.process_orderbook({"type": "snapshot", "data": {"b": self.orderbook_data["bids"], "a": self.orderbook_data["asks"]}})
+
+    def reset_trades(self, reset_counter: bool = False):
+        self.positions = []
+        if reset_counter:
+            self.iterations = 0  # Reiniciar contador si se solicita
+        logger.info(f"Trades reseteados para {self.symbol}. Contador reiniciado: {reset_counter}")

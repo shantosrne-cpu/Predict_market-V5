@@ -1,0 +1,208 @@
+import logging
+import time
+from pathlib import Path
+from typing import Dict, List
+
+import numpy as np
+import pygame
+from numba import jit
+from scipy import stats
+from telegram import Bot
+
+from adju_config import config
+
+# Configurar logging con vibe metalero
+logging.basicConfig(level=logging.INFO, format='%(asctime)s [⚡ METAL ⚡] %(message)s')
+logger = logging.getLogger("WhaleDetector")
+
+@jit(nopython=True)
+def calculate_ema(prices: np.ndarray, period: int) -> float:
+    """Calcula EMA (Media Móvil Exponencial) con Numba para velocidad bestial."""
+    if len(prices) < period:
+        return np.mean(prices) if prices.size > 0 else 0.0
+    multiplier = 2 / (period + 1)
+    ema = prices[-1]
+    for i in range(len(prices) - 1, 0, -1):
+        ema = prices[i] * multiplier + ema * (1 - multiplier)
+    return ema
+
+@jit(nopython=True)
+def calculate_atr(candles: np.ndarray, period: int) -> float:
+    """Calcula ATR (Average True Range) con Numba para volatilidad bestial."""
+    if len(candles) < period:
+        return np.mean(candles[:, 2] - candles[:, 3]) if candles.size > 0 else 0.0  # high - low
+    tr = np.maximum(
+        candles[1:, 2] - candles[1:, 3],  # high - low
+        np.abs(candles[1:, 2] - candles[:-1, 4]),  # high - prev close
+        np.abs(candles[1:, 3] - candles[:-1, 4])  # low - prev close
+    )
+    return np.mean(tr[-period:])
+
+class WhaleDetector:
+    """Detecta ballenas en tiempo real para AdjuDev con matemáticas avanzadas, despertador metalero y notificaciones bestiales."""
+
+    def __init__(self, symbol: str = "BTCUSDT"):
+        self.symbol = symbol
+        self.config = config.get_config()
+        self.threshold_volume = self.config["whale_volume_threshold"]
+        self.threshold_order_size = self.config["whale_order_threshold"]
+        self.zscore_threshold = self.config["whale_zscore_threshold"]
+        self.atr_period = self.config["whale_atr_period"]
+        self.ema_short = self.config["whale_ema_short"]
+        self.ema_long = self.config["whale_ema_long"]
+        self.last_alert_time = 0
+        self.alert_cooldown = 300  # 5 minutos entre alertas
+        self.price_history = []  # Historial para EMA y ATR
+        self.volume_history = []  # Historial para volúmenes
+        self.telegram_bot = None
+        if self.config["telegram_bot_token"] and self.config["telegram_chat_id"]:
+            self.telegram_bot = Bot(token=self.config["telegram_bot_token"])
+
+    def detect_whale(self, orderbook: Dict, ticker: Dict, candles: List[Dict]) -> bool:
+        """Detecta ballenas con matemáticas bestiales, evitando saturación."""
+        current_time = time.time()
+        if current_time - self.last_alert_time < self.alert_cooldown:
+            return False  # Evitar alertas frecuentes
+
+        try:
+            # Validar y convertir candles a numpy
+            if not candles or len(candles) < self.ema_long:
+                return False
+            candle_array = np.array([[c.get("timestamp", 0), c.get("open", 0), c.get("high", 0), c.get("low", 0),
+                                     c.get("close", 0), c.get("volume", 0)]
+                                    for c in candles[-self.ema_long:]], dtype=np.float64)
+
+            # Actualizar historiales
+            self.price_history.append(ticker.get("last_price", 0.0))
+            self.volume_history.append(ticker.get("volume_24h", 0.0))
+            if len(self.price_history) > self.ema_long:
+                self.price_history.pop(0)
+            if len(self.volume_history) > self.ema_long:
+                self.volume_history.pop(0)
+
+            # Calcular EMA y ATR con Numba
+            ema_short = calculate_ema(np.array(self.price_history), self.ema_short)
+            ema_long = calculate_ema(np.array(self.price_history), self.ema_long)
+            atr = calculate_atr(candle_array, self.atr_period)
+
+            # Análisis estadístico de volumen (Z-score con Numba)
+            if len(self.volume_history) > 1:
+                volume_array = np.array(self.volume_history)
+                z_score = stats.zscore(volume_array)[-1] if volume_array.size > 1 else 0.0
+                if abs(z_score) > self.zscore_threshold:
+                    logger.warning(
+                        f"🌊 ¡BALLENA DETECTADA! Z-score volumen: {z_score:.2f} (umbral {self.zscore_threshold}) para {self.symbol}")
+                    self._trigger_alarm(ticker, "Z-score volumen alto")
+                    self.last_alert_time = current_time
+                    return True
+
+            # Verificar volumen 24h en ticker para actividad masiva
+            volume_24h = ticker.get("volume_24h", 0.0)
+            if volume_24h > self.threshold_volume:
+                logger.warning(
+                    f"🌊 ¡BALLENA DETECTADA! Volumen 24h: {volume_24h:.2f} USDT (umbral {self.threshold_volume}) para {self.symbol}")
+                self._trigger_alarm(ticker, "Volumen 24h alto")
+                self.last_alert_time = current_time
+                return True
+
+            # Verificar órdenes grandes en orderbook con volatilidad (ATR)
+            bids = np.array(orderbook.get("bids", []), dtype=object)
+            asks = np.array(orderbook.get("asks", []), dtype=object)
+            last_price = ticker.get("last_price", 90000.0)
+            for orders in (bids, asks):
+                if orders.size > 0 and orders.ndim == 1 and all(isinstance(o, list) and len(o) == 2 for o in orders):
+                    order_sizes = np.array([o[1] for o in orders], dtype=np.float64)
+                    order_values_usdt = order_sizes * last_price
+                    if np.any(order_values_usdt > self.threshold_order_size * last_price):
+                        max_order_value = np.max(order_values_usdt[order_values_usdt > self.threshold_order_size * last_price])
+                        if max_order_value > atr * 10:  # Orden significativa en relación a volatilidad
+                            logger.warning(
+                                f"🌊 ¡BALLENA DETECTADA! Orden grande: {max_order_value:.2f} USDT (umbral {self.threshold_order_size * last_price:.2f}, ATR {atr:.2f}) para {self.symbol}")
+                            self._trigger_alarm(ticker, "Orden grande con volatilidad alta")
+                            self.last_alert_time = current_time
+                            return True
+
+            # Detección con EMA cruzada y volatilidad
+            if ema_short > ema_long and len(self.price_history) >= self.ema_long:
+                price_change = (self.price_history[-1] - self.price_history[0]) / self.price_history[0] * 100 if self.price_history[0] != 0 else 0.0
+                if price_change > 1.0 and volume_24h > self.threshold_volume * 0.5:
+                    logger.warning(
+                        f"🌊 ¡BALLENA DETECTADA! Cruce EMA (short {ema_short:.2f} > long {ema_long:.2f}), Cambio precio: {price_change:.2f}%, Volumen: {volume_24h:.2f} USDT para {self.symbol}")
+                    self._trigger_alarm(ticker, "Cruce EMA con volumen alto")
+                    self.last_alert_time = current_time
+                    return True
+
+            return False
+        except Exception as e:
+            logger.error(f"❌ Riff roto detectando ballenas matemáticamente: {e}")
+            return False
+
+    # Inicializar pygame
+    pygame.mixer.init()
+
+    def _trigger_alarm(self, ticker: Dict, reason: str):
+        logger.info(
+            f"🎸 ¡RIIIFF METALERO DE DESPERTADOR BESTIAL! Ballena detectada por {reason} - Precio: {ticker.get('last_price', 0.0):.2f}, Volumen 24h: {ticker.get('volume_24h', 0.0):.2f} - ¡Hora de operar!")
+        try:
+            sample_rate = 44100
+            frequency = 220
+            duration = 1.0
+            t = np.linspace(0, duration, int(sample_rate * duration), False)
+            wave = 0.5 * np.sign(np.sin(2 * np.pi * frequency * t))
+            sound_array = (wave * 32767).astype(np.int16)
+            sound = pygame.mixer.Sound(sound_array)
+            sound.play()
+        except Exception as e:
+            logger.warning(f"❌ No se pudo reproducir el riff metalero: {e} - Usando solo logs")
+
+        # Notificación por Telegram
+        if self.telegram_bot:
+            try:
+                self.telegram_bot.send_message(
+                    chat_id=self.config["telegram_chat_id"],
+                    text=f"🌊 [⚡ METAL ⚡] ¡BALLENA DETECTADA en {self.symbol}!\n"
+                         f"Razón: {reason}\n"
+                         f"Precio: {ticker.get('last_price', 0.0):.2f} USDT\n"
+                         f"Volumen 24h: {ticker.get('volume_24h', 0.0):.2f} USDT\n"
+                         f"¡Hora de operar!"
+                )
+                logger.info("📣 Notificación enviada por Telegram")
+            except Exception as e:
+                logger.error(f"❌ Fallo en notificación Telegram: {e}")
+
+    def update_thresholds(self, volume_threshold: float = None, order_threshold: float = None,
+                          zscore_threshold: float = None):
+        """Actualiza umbrales de detección de ballenas dinámicamente con optimización."""
+        if volume_threshold:
+            self.threshold_volume = volume_threshold
+        if order_threshold:
+            self.threshold_order_size = order_threshold
+        if zscore_threshold:
+            self.zscore_threshold = zscore_threshold
+        logger.info(
+            f"⚡ Umbrales actualizados matemáticamente - Volumen: {self.threshold_volume}, Orden: {self.threshold_order_size} BTC, Z-score: {self.zscore_threshold}")
+
+    def optimize_thresholds(self, historical_data: List[Dict]) -> Dict:
+        """Optimiza umbrales dinámicamente usando datos históricos con minimización de errores y Numba."""
+        volumes = np.array([d.get("volume_24h", 0.0) for d in historical_data if "volume_24h" in d], dtype=np.float64)
+        orders = np.array([float(o[1]) * d.get("last_price", 90000.0) for d in historical_data
+                          for o in (d.get("bids", []) + d.get("asks", [])) if "last_price" in d], dtype=np.float64)
+
+        if volumes.size > 0 and orders.size > 0:
+            volume_threshold = np.percentile(volumes, 95)  # 95% de los volúmenes
+            order_threshold = np.percentile(orders, 95) / historical_data[0].get("last_price", 90000.0)  # 95% de los tamaños de orden en BTC
+            zscore_threshold = 2.5  # Mantiene Z-score ajustado, optimizable
+
+            self.update_thresholds(volume_threshold, order_threshold, zscore_threshold)
+            return {"volume_threshold": volume_threshold, "order_threshold": order_threshold,
+                    "zscore_threshold": zscore_threshold}
+        return {"volume_threshold": self.threshold_volume, "order_threshold": self.threshold_order_size,
+                "zscore_threshold": self.zscore_threshold}
+
+if __name__ == "__main__":
+    whale_detector = WhaleDetector()
+    test_candles = [{"timestamp": int(time.time() * 1000), "open": 90000, "high": 90100, "low": 89900, "close": 90000,
+                     "volume": 1000} for _ in range(14)]
+    test_orderbook = {"bids": [[90000.0, 15.0]], "asks": [[90100.0, 12.0]]}
+    test_ticker = {"last_price": 90000.0, "volume_24h": 2500000.0}
+    whale_detector.detect_whale(test_orderbook, test_ticker, test_candles)

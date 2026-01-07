@@ -1,0 +1,6038 @@
+"C:\Users\Angel Gabriel\PycharmProjects\NerTzh_\.venv\Scripts\python.exe" "C:\Users\Angel Gabriel\PycharmProjects\NerTzh_\src\Nertzh.py"
+2025-03-10 03:00:51,915 [⚡ METAL ⚡] 🧹 Trades reseteados
+2025-03-10 03:00:51,915 [⚡ METAL ⚡] 🔥 Motor metalero iniciado para ['BTCUSDT', 'ETHUSDT']
+2025-03-10 03:00:51,915 [⚡ METAL ⚡] Using proactor: IocpProactor
+2025-03-10 03:00:51,919 [⚡ METAL ⚡] Using proactor: IocpProactor
+INFO:     Started server process [11736]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8081 (Press CTRL+C to quit)
+2025-03-10 03:00:53,438 [⚡ METAL ⚡] 📈 Velas iniciales para BTCUSDT: 50
+2025-03-10 03:00:53,651 [⚡ METAL ⚡] 📈 Velas iniciales para ETHUSDT: 50
+2025-03-10 03:00:54,618 [⚡ METAL ⚡] 📊 Orderbook para BTCUSDT: Bids=100, Asks=100
+2025-03-10 03:00:54,839 [⚡ METAL ⚡] 📊 Orderbook para ETHUSDT: Bids=100, Asks=32
+2025-03-10 03:00:55,059 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:00:55,280 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:00:55,282 [⚡ METAL ⚡] 🌐 WebSocket en hilo iniciado
+2025-03-10 03:00:57,167 [⚡ METAL ⚡] Websocket connected
+2025-03-10 03:00:57,167 [⚡ METAL ⚡] 🌐 WebSocket abierto
+2025-03-10 03:00:57,168 [⚡ METAL ⚡] 📡 Suscripción enviada para BTCUSDT: {'op': 'subscribe', 'args': ['kline.1.BTCUSDT', 'orderbook.50.BTCUSDT', 'tickers.BTCUSDT']}
+2025-03-10 03:00:57,168 [⚡ METAL ⚡] 📡 Suscripción enviada para ETHUSDT: {'op': 'subscribe', 'args': ['kline.1.ETHUSDT', 'orderbook.50.ETHUSDT', 'tickers.ETHUSDT']}
+2025-03-10 03:00:57,611 [⚡ METAL ⚡] 📨 Mensaje: {
+  "success": true,
+  "ret_msg": "subscribe",
+  "conn_id": "bbfdb815-4657-401a-ada1-8bb89457e5c1",
+  "op": "subscribe"
+}
+2025-03-10 03:00:57,611 [⚡ METAL ⚡] ✅ Suscripción: []
+2025-03-10 03:00:57,612 [⚡ METAL ⚡] 📨 Mensaje: {
+  "type": "snapshot",
+  "topic": "kline.1.BTCUSDT",
+  "data": [
+    {
+      "start": 1741590000000,
+      "end": 1741590059999,
+      "interval": "1",
+      "open": "75181.81",
+      "close": "75181.81",
+      "high": "75181.81",
+      "low": "75181.81",
+      "volume": "0.012231",
+      "turnover": "919.54871811",
+      "confirm": false,
+      "timestamp": 1741590053569
+    }
+  ],
+  "ts": 1741590053569
+}
+2025-03-10 03:00:57,613 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590056662,
+  "type": "snapshot",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "75000",
+        "15193.126097"
+      ],
+      [
+        "74972.97",
+        "0.000133"
+      ],
+      [
+        "74889.44",
+        "0.000134"
+      ],
+      [
+        "74805.9",
+        "0.000134"
+      ],
+      [
+        "74250",
+        "0.001549"
+      ],
+      [
+        "74000",
+        "0.00013"
+      ],
+      [
+        "73444.06",
+        "38"
+      ],
+      [
+        "73129.99",
+        "0.000065"
+      ],
+      [
+        "72492.61",
+        "0.000057"
+      ],
+      [
+        "72337.15",
+        "0.000065"
+      ],
+      [
+        "72210.94",
+        "0.000665"
+      ],
+      [
+        "72002.71",
+        "0.000808"
+      ],
+      [
+        "72000",
+        "0.00013"
+      ],
+      [
+        "71625",
+        "0.001549"
+      ],
+      [
+        "71392.5",
+        "0.007654"
+      ],
+      [
+        "71000",
+        "80"
+      ],
+      [
+        "70905.36",
+        "0.00161"
+      ],
+      [
+        "70614.75",
+        "0.000069"
+      ],
+      [
+        "70603.48",
+        "0.00148"
+      ],
+      [
+        "70539.84",
+        "0.00128"
+      ],
+      [
+        "70260.07",
+        "0.000065"
+      ],
+      [
+        "70005.57",
+        "0.000162"
+      ],
+      [
+        "70000",
+        "0.00113"
+      ],
+      [
+        "69959.39",
+        "0.00144"
+      ],
+      [
+        "69533.3",
+        "0.000065"
+      ],
+      [
+        "69475.8",
+        "0.00135"
+      ],
+      [
+        "69449.97",
+        "0.00166"
+      ],
+      [
+        "69000",
+        "0.001549"
+      ],
+      [
+        "68486.3",
+        "0.00133"
+      ],
+      [
+        "68434.5",
+        "0.000089"
+      ],
+      [
+        "68384.45",
+        "0.00135"
+      ],
+      [
+        "68159.07",
+        "0.003383"
+      ],
+      [
+        "68055.43",
+        "0.00122"
+      ],
+      [
+        "68000",
+        "0.001"
+      ],
+      [
+        "67838.74",
+        "0.000808"
+      ],
+      [
+        "67822.87",
+        "0.007808"
+      ],
+      [
+        "67732.77",
+        "0.00146"
+      ],
+      [
+        "67422.37",
+        "0.000665"
+      ],
+      [
+        "67390.15",
+        "0.000065"
+      ],
+      [
+        "66869.05",
+        "0.000089"
+      ],
+      [
+        "66859",
+        "0.000057"
+      ],
+      [
+        "66729.45",
+        "0.000065"
+      ],
+      [
+        "66666",
+        "0.001"
+      ],
+      [
+        "65303.6",
+        "0.000089"
+      ],
+      [
+        "65008.37",
+        "0.000162"
+      ],
+      [
+        "64520.23",
+        "0.000065"
+      ],
+      [
+        "64431.73",
+        "0.007967"
+      ],
+      [
+        "64229.99",
+        "0.000069"
+      ],
+      [
+        "64000",
+        "0.734129"
+      ],
+      [
+        "63925.6",
+        "0.000065"
+      ]
+    ],
+    "a": [
+      [
+        "75181.81",
+        "59.635328"
+      ],
+      [
+        "75181.83",
+        "0.003"
+      ],
+      [
+        "75363.62",
+        "0.003257"
+      ],
+      [
+        "75545.43",
+        "0.007341"
+      ],
+      [
+        "75727.24",
+        "50.007341"
+      ],
+      [
+        "75909.05",
+        "0.007341"
+      ],
+      [
+        "76090.86",
+        "0.007341"
+      ],
+      [
+        "76250",
+        "50.015116"
+      ],
+      [
+        "76272.67",
+        "0.007341"
+      ],
+      [
+        "76454.48",
+        "0.007341"
+      ],
+      [
+        "76636.29",
+        "0.007341"
+      ],
+      [
+        "76818.1",
+        "0.007341"
+      ],
+      [
+        "76999.91",
+        "50.007341"
+      ],
+      [
+        "77181.72",
+        "0.007341"
+      ],
+      [
+        "77363.53",
+        "0.007341"
+      ],
+      [
+        "77500",
+        "50.015116"
+      ],
+      [
+        "77545.34",
+        "0.007341"
+      ],
+      [
+        "77727.15",
+        "0.007341"
+      ],
+      [
+        "77908.96",
+        "0.007341"
+      ],
+      [
+        "78000",
+        "0.000129"
+      ],
+      [
+        "78090.77",
+        "0.007341"
+      ],
+      [
+        "78272.58",
+        "0.007341"
+      ],
+      [
+        "78454.39",
+        "0.007341"
+      ],
+      [
+        "78636.2",
+        "0.007341"
+      ],
+      [
+        "78750",
+        "0.015116"
+      ],
+      [
+        "78818.01",
+        "0.007341"
+      ],
+      [
+        "78907.5",
+        "0.00715"
+      ],
+      [
+        "78999.82",
+        "0.007341"
+      ],
+      [
+        "79076.5",
+        "0.00107"
+      ],
+      [
+        "79181.63",
+        "0.007341"
+      ],
+      [
+        "79228.18",
+        "0.00107"
+      ],
+      [
+        "79343.28",
+        "0.00116"
+      ],
+      [
+        "79363.44",
+        "0.007341"
+      ],
+      [
+        "79500",
+        "0.001547"
+      ],
+      [
+        "79545.25",
+        "0.007341"
+      ],
+      [
+        "79727.06",
+        "0.007341"
+      ],
+      [
+        "79841.92",
+        "0.00118"
+      ],
+      [
+        "79908.87",
+        "0.007341"
+      ],
+      [
+        "79999.97",
+        "0.000161"
+      ],
+      [
+        "80000",
+        "1076.127199"
+      ],
+      [
+        "80032.66",
+        "0.00146"
+      ],
+      [
+        "80090.68",
+        "0.007341"
+      ],
+      [
+        "80272.49",
+        "0.007341"
+      ],
+      [
+        "80330.65",
+        "0.000803"
+      ],
+      [
+        "80454.3",
+        "0.007341"
+      ],
+      [
+        "80636.11",
+        "0.007341"
+      ],
+      [
+        "80817.92",
+        "0.007341"
+      ],
+      [
+        "80849.25",
+        "0.00109"
+      ],
+      [
+        "80999.73",
+        "0.007341"
+      ],
+      [
+        "81000",
+        "25.68585"
+      ]
+    ],
+    "u": 399399,
+    "seq": 1598008212
+  },
+  "cts": 1741590056122
+}
+2025-03-10 03:00:57,613 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=50, Asks=50
+2025-03-10 03:00:57,656 [⚡ METAL ⚡] 🤘 Orderbook actualizado para BTCUSDT: Bids=50, Asks=50
+2025-03-10 03:00:57,656 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590056388,
+  "type": "snapshot",
+  "cs": 1598008102,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187611",
+    "turnover24h": "1596624149.5266616",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82308.692828"
+  }
+}
+2025-03-10 03:00:57,715 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:00:57,715 [⚡ METAL ⚡] 📨 Mensaje: {
+  "success": true,
+  "ret_msg": "subscribe",
+  "conn_id": "bbfdb815-4657-401a-ada1-8bb89457e5c1",
+  "op": "subscribe"
+}
+2025-03-10 03:00:57,715 [⚡ METAL ⚡] ✅ Suscripción: []
+2025-03-10 03:00:57,715 [⚡ METAL ⚡] 📨 Mensaje: {
+  "type": "snapshot",
+  "topic": "kline.1.ETHUSDT",
+  "data": [
+    {
+      "start": 1741590000000,
+      "end": 1741590059999,
+      "interval": "1",
+      "open": "2091.55",
+      "close": "2091.55",
+      "high": "2091.55",
+      "low": "2091.55",
+      "volume": "0",
+      "turnover": "0",
+      "confirm": false,
+      "timestamp": 1741590033052
+    }
+  ],
+  "ts": 1741590033052
+}
+2025-03-10 03:00:57,716 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.ETHUSDT",
+  "ts": 1741590056730,
+  "type": "snapshot",
+  "data": {
+    "s": "ETHUSDT",
+    "b": [
+      [
+        "2063.8",
+        "0.00738"
+      ],
+      [
+        "2057.65",
+        "0.0002"
+      ],
+      [
+        "2051.5",
+        "0.00738"
+      ],
+      [
+        "2045.35",
+        "0.00738"
+      ],
+      [
+        "2043.19",
+        "0.48943"
+      ],
+      [
+        "2039.2",
+        "0.00738"
+      ],
+      [
+        "2033.05",
+        "0.00738"
+      ],
+      [
+        "2026.9",
+        "0.00738"
+      ],
+      [
+        "2023.17",
+        "1722.1325"
+      ],
+      [
+        "2022.76",
+        "0.49437"
+      ],
+      [
+        "2020.75",
+        "0.00738"
+      ],
+      [
+        "2014.6",
+        "0.00738"
+      ],
+      [
+        "2008.45",
+        "0.00738"
+      ],
+      [
+        "2002.94",
+        "0.04993"
+      ],
+      [
+        "2002.53",
+        "0.49937"
+      ],
+      [
+        "2002.3",
+        "0.00738"
+      ],
+      [
+        "1996.15",
+        "0.00738"
+      ],
+      [
+        "1990",
+        "0.00738"
+      ],
+      [
+        "1983.85",
+        "0.00738"
+      ],
+      [
+        "1982.91",
+        "0.05043"
+      ],
+      [
+        "1982.5",
+        "0.50441"
+      ],
+      [
+        "1977.7",
+        "0.00738"
+      ],
+      [
+        "1971.55",
+        "0.00738"
+      ],
+      [
+        "1963.08",
+        "0.05094"
+      ],
+      [
+        "1962.68",
+        "0.50951"
+      ],
+      [
+        "1943.45",
+        "0.05145"
+      ],
+      [
+        "1943.05",
+        "0.51465"
+      ],
+      [
+        "1924.02",
+        "0.05197"
+      ],
+      [
+        "1923.62",
+        "0.51985"
+      ],
+      [
+        "1904.78",
+        "0.0525"
+      ],
+      [
+        "1904.38",
+        "0.52511"
+      ],
+      [
+        "1885.73",
+        "0.05303"
+      ],
+      [
+        "1885.34",
+        "0.53041"
+      ],
+      [
+        "1866.87",
+        "0.05357"
+      ],
+      [
+        "1866.49",
+        "0.53576"
+      ],
+      [
+        "1848.2",
+        "0.05411"
+      ],
+      [
+        "1847.25",
+        "0.00549"
+      ],
+      [
+        "1829.72",
+        "0.05465"
+      ],
+      [
+        "1700",
+        "4"
+      ],
+      [
+        "1600",
+        "1"
+      ],
+      [
+        "1561.8",
+        "0.00549"
+      ],
+      [
+        "1472.39",
+        "0.09424"
+      ],
+      [
+        "1465.13",
+        "0.00683"
+      ],
+      [
+        "1461.24",
+        "4602.18701"
+      ],
+      [
+        "1460.27",
+        "0.00548"
+      ],
+      [
+        "1459.97",
+        "81990.853"
+      ],
+      [
+        "1450",
+        "23010.87486"
+      ],
+      [
+        "1447.86",
+        "11310.16795"
+      ],
+      [
+        "1447.45",
+        "3912.67503"
+      ],
+      [
+        "1434.93",
+        "7641.76836"
+      ]
+    ],
+    "a": [
+      [
+        "2279.75",
+        "0.43864"
+      ],
+      [
+        "2418.15",
+        "0.00586"
+      ],
+      [
+        "2538.86",
+        "0.57142"
+      ],
+      [
+        "2638.86",
+        "1"
+      ],
+      [
+        "2703.6",
+        "0.00586"
+      ],
+      [
+        "2738.86",
+        "1"
+      ],
+      [
+        "2838.86",
+        "1"
+      ],
+      [
+        "2900",
+        "1"
+      ],
+      [
+        "2989.05",
+        "0.00586"
+      ],
+      [
+        "3000",
+        "466.42924"
+      ],
+      [
+        "3002.94",
+        "0.00334"
+      ],
+      [
+        "3120.02",
+        "0.00321"
+      ],
+      [
+        "3191.19",
+        "0.02"
+      ],
+      [
+        "3274.5",
+        "0.00586"
+      ],
+      [
+        "3354.12",
+        "0.3582"
+      ],
+      [
+        "3384.07",
+        "0.38575"
+      ],
+      [
+        "3414.01",
+        "0.41331"
+      ],
+      [
+        "3443.96",
+        "0.44086"
+      ],
+      [
+        "3473.91",
+        "0.46842"
+      ],
+      [
+        "3500",
+        "448.1299"
+      ],
+      [
+        "3503.86",
+        "0.49597"
+      ],
+      [
+        "3533.81",
+        "0.52352"
+      ],
+      [
+        "3559.95",
+        "0.00586"
+      ],
+      [
+        "3563.75",
+        "0.55108"
+      ],
+      [
+        "3593.7",
+        "0.57863"
+      ],
+      [
+        "3617.96",
+        "0.00277"
+      ],
+      [
+        "3623.65",
+        "0.60618"
+      ],
+      [
+        "3653.34",
+        "0.00274"
+      ],
+      [
+        "3653.6",
+        "0.63374"
+      ],
+      [
+        "3683.54",
+        "0.66129"
+      ],
+      [
+        "4000",
+        "0.125"
+      ],
+      [
+        "20786.75",
+        "0.0001"
+      ]
+    ],
+    "u": 5826,
+    "seq": 962361068
+  },
+  "cts": 1741589461367
+}
+2025-03-10 03:00:57,716 [⚡ METAL ⚡] 📊 Orderbook recibido para ETHUSDT: Bids=50, Asks=32
+2025-03-10 03:00:57,727 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590056387,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2065.982018"
+  }
+}
+2025-03-10 03:00:57,734 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:00:57,734 [⚡ METAL ⚡] 📨 Mensaje: {
+  "success": true,
+  "ret_msg": "pong",
+  "conn_id": "bbfdb815-4657-401a-ada1-8bb89457e5c1",
+  "op": "ping"
+}
+2025-03-10 03:00:57,734 [⚡ METAL ⚡] 📡 Pong recibido
+2025-03-10 03:00:57,956 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590057385,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2065.993408"
+  }
+}
+2025-03-10 03:00:57,964 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:00:57,964 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590057388,
+  "type": "snapshot",
+  "cs": 1598008102,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187611",
+    "turnover24h": "1596624149.5266616",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82311.808718"
+  }
+}
+2025-03-10 03:00:57,970 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:00:58,432 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590057862,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "69959.39",
+        "0"
+      ],
+      [
+        "63738.15",
+        "0.000089"
+      ]
+    ],
+    "a": [
+      [
+        "79841.92",
+        "0"
+      ],
+      [
+        "81002.6",
+        "0.00122"
+      ]
+    ],
+    "u": 399400,
+    "seq": 1598008222
+  },
+  "cts": 1741590057856
+}
+2025-03-10 03:00:58,432 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:00:58,931 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590058361,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "70539.84",
+        "0"
+      ],
+      [
+        "63674.77",
+        "0.000808"
+      ]
+    ],
+    "a": [
+      [
+        "80032.66",
+        "0"
+      ],
+      [
+        "81052.63",
+        "90"
+      ]
+    ],
+    "u": 399401,
+    "seq": 1598008232
+  },
+  "cts": 1741590058353
+}
+2025-03-10 03:00:58,931 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:00:59,023 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590058386,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2066.050895"
+  }
+}
+2025-03-10 03:00:59,030 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:00:59,030 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590058388,
+  "type": "snapshot",
+  "cs": 1598008102,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187611",
+    "turnover24h": "1596624149.5266616",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82312.955862"
+  }
+}
+2025-03-10 03:00:59,037 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:00:59,432 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590058862,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "68384.45",
+        "0"
+      ],
+      [
+        "62824.53",
+        "0.002663"
+      ]
+    ],
+    "a": [],
+    "u": 399402,
+    "seq": 1598008234
+  },
+  "cts": 1741590058851
+}
+2025-03-10 03:00:59,432 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:00:59,432 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos
+2025-03-10 03:00:59,932 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590059362,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [],
+    "a": [
+      [
+        "79076.5",
+        "0"
+      ],
+      [
+        "81105.26",
+        "89.999931"
+      ]
+    ],
+    "u": 399403,
+    "seq": 1598008243
+  },
+  "cts": 1741590059346
+}
+2025-03-10 03:00:59,932 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=0, Asks=2
+2025-03-10 03:00:59,932 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=0, Asks=1, manteniendo datos previos
+2025-03-10 03:00:59,957 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590059386,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2066.365086"
+  }
+}
+2025-03-10 03:00:59,966 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:00:59,966 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590059388,
+  "type": "snapshot",
+  "cs": 1598008102,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187611",
+    "turnover24h": "1596624149.5266616",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82311.812594"
+  }
+}
+2025-03-10 03:00:59,973 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:00,211 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590059641,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "70531.92",
+        "0.00133"
+      ],
+      [
+        "62824.53",
+        "0"
+      ]
+    ],
+    "a": [
+      [
+        "79502.37",
+        "0.00115"
+      ],
+      [
+        "81105.26",
+        "0"
+      ]
+    ],
+    "u": 399404,
+    "seq": 1598008245
+  },
+  "cts": 1741590059621
+}
+2025-03-10 03:01:00,212 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:00,552 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590059982,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "70453.75",
+        "0.00116"
+      ],
+      [
+        "63674.77",
+        "0"
+      ]
+    ],
+    "a": [
+      [
+        "79818.61",
+        "0.00133"
+      ],
+      [
+        "81052.63",
+        "0"
+      ]
+    ],
+    "u": 399405,
+    "seq": 1598008247
+  },
+  "cts": 1741590059971
+}
+2025-03-10 03:01:00,553 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:00,891 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590060321,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "68780.66",
+        "0.00164"
+      ],
+      [
+        "63738.15",
+        "0"
+      ]
+    ],
+    "a": [],
+    "u": 399406,
+    "seq": 1598008256
+  },
+  "cts": 1741590060317
+}
+2025-03-10 03:01:00,891 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:01:00,891 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos
+2025-03-10 03:01:00,912 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590060342,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [],
+    "a": [
+      [
+        "79998.6",
+        "0.00109"
+      ],
+      [
+        "81002.6",
+        "0"
+      ]
+    ],
+    "u": 399407,
+    "seq": 1598008257
+  },
+  "cts": 1741590060320
+}
+2025-03-10 03:01:00,912 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=0, Asks=2
+2025-03-10 03:01:00,912 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=0, Asks=1, manteniendo datos previos
+2025-03-10 03:01:00,958 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590060387,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2066.321221"
+  }
+}
+2025-03-10 03:01:00,967 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:01,139 [⚡ METAL ⚡] 📨 Mensaje: {
+  "type": "snapshot",
+  "topic": "kline.1.BTCUSDT",
+  "data": [
+    {
+      "start": 1741590000000,
+      "end": 1741590059999,
+      "interval": "1",
+      "open": "75181.81",
+      "close": "75181.81",
+      "high": "75181.81",
+      "low": "75181.81",
+      "volume": "0.012231",
+      "turnover": "919.54871811",
+      "confirm": true,
+      "timestamp": 1741590060569
+    }
+  ],
+  "ts": 1741590060569
+}
+2025-03-10 03:01:01,140 [⚡ METAL ⚡] 📨 Mensaje: {
+  "type": "snapshot",
+  "topic": "kline.1.BTCUSDT",
+  "data": [
+    {
+      "start": 1741590060000,
+      "end": 1741590119999,
+      "interval": "1",
+      "open": "75181.81",
+      "close": "75181.81",
+      "high": "75181.81",
+      "low": "75181.81",
+      "volume": "0",
+      "turnover": "0",
+      "confirm": false,
+      "timestamp": 1741590060569
+    }
+  ],
+  "ts": 1741590060569
+}
+2025-03-10 03:01:01,141 [⚡ METAL ⚡] ⚠️ Volumen insuficiente (0.0) en 2025-03-10 07:01:00+00:00 para BTCUSDT, ignorando vela
+2025-03-10 03:01:01,620 [⚡ METAL ⚡] 📨 Mensaje: {
+  "type": "snapshot",
+  "topic": "kline.1.ETHUSDT",
+  "data": [
+    {
+      "start": 1741590000000,
+      "end": 1741590059999,
+      "interval": "1",
+      "open": "2091.55",
+      "close": "2091.55",
+      "high": "2091.55",
+      "low": "2091.55",
+      "volume": "0",
+      "turnover": "0",
+      "confirm": true,
+      "timestamp": 1741590061049
+    }
+  ],
+  "ts": 1741590061049
+}
+2025-03-10 03:01:01,621 [⚡ METAL ⚡] 📨 Mensaje: {
+  "type": "snapshot",
+  "topic": "kline.1.ETHUSDT",
+  "data": [
+    {
+      "start": 1741590060000,
+      "end": 1741590119999,
+      "interval": "1",
+      "open": "2091.55",
+      "close": "2091.55",
+      "high": "2091.55",
+      "low": "2091.55",
+      "volume": "0",
+      "turnover": "0",
+      "confirm": false,
+      "timestamp": 1741590061049
+    }
+  ],
+  "ts": 1741590061049
+}
+2025-03-10 03:01:01,622 [⚡ METAL ⚡] ⚠️ Volumen insuficiente (0.0) en 2025-03-10 07:01:00+00:00 para ETHUSDT, ignorando vela
+2025-03-10 03:01:01,958 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590061386,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2066.303019"
+  }
+}
+2025-03-10 03:01:01,965 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:02,958 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590062386,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2066.420186"
+  }
+}
+2025-03-10 03:01:02,966 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:02,966 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590062388,
+  "type": "snapshot",
+  "cs": 1598008102,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187611",
+    "turnover24h": "1596624149.5266616",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82311.816469"
+  }
+}
+2025-03-10 03:01:02,972 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:03,072 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590062502,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "69475.8",
+        "0"
+      ],
+      [
+        "63738.15",
+        "0.000089"
+      ]
+    ],
+    "a": [
+      [
+        "79228.18",
+        "0"
+      ],
+      [
+        "81002.6",
+        "0.00122"
+      ]
+    ],
+    "u": 399408,
+    "seq": 1598008276
+  },
+  "cts": 1741590062497
+}
+2025-03-10 03:01:03,072 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:03,083 [⚡ METAL ⚡] 🤘 Orderbook actualizado para BTCUSDT: Bids=1, Asks=1
+2025-03-10 03:01:03,572 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590063002,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "68780.66",
+        "0"
+      ],
+      [
+        "63674.77",
+        "0.000808"
+      ]
+    ],
+    "a": [],
+    "u": 399409,
+    "seq": 1598008278
+  },
+  "cts": 1741590062995
+}
+2025-03-10 03:01:03,572 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:01:03,572 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos
+2025-03-10 03:01:03,957 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590063385,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2066.719612"
+  }
+}
+2025-03-10 03:01:03,966 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:04,093 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590063521,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "67732.77",
+        "0"
+      ],
+      [
+        "62824.53",
+        "0.002663"
+      ]
+    ],
+    "a": [
+      [
+        "79998.6",
+        "0"
+      ],
+      [
+        "81052.63",
+        "90"
+      ]
+    ],
+    "u": 399410,
+    "seq": 1598008288
+  },
+  "cts": 1741590063500
+}
+2025-03-10 03:01:04,093 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:04,851 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590064281,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "70361.33",
+        "0.00157"
+      ],
+      [
+        "62824.53",
+        "0"
+      ]
+    ],
+    "a": [
+      [
+        "79354.77",
+        "0.00102"
+      ],
+      [
+        "81052.63",
+        "0"
+      ]
+    ],
+    "u": 399411,
+    "seq": 1598008299
+  },
+  "cts": 1741590064276
+}
+2025-03-10 03:01:04,851 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:04,959 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590064386,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2067.163748"
+  }
+}
+2025-03-10 03:01:04,966 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:04,967 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590064388,
+  "type": "snapshot",
+  "cs": 1598008102,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187611",
+    "turnover24h": "1596624149.5266616",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82314.804468"
+  }
+}
+2025-03-10 03:01:04,974 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:05,211 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590064641,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "68333.56",
+        "0.0015"
+      ],
+      [
+        "63674.77",
+        "0"
+      ]
+    ],
+    "a": [
+      [
+        "79808.6",
+        "0.00141"
+      ],
+      [
+        "81002.6",
+        "0"
+      ]
+    ],
+    "u": 399412,
+    "seq": 1598008301
+  },
+  "cts": 1741590064626
+}
+2025-03-10 03:01:05,212 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:05,556 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590064982,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "67890.18",
+        "0.00148"
+      ],
+      [
+        "63738.15",
+        "0"
+      ]
+    ],
+    "a": [],
+    "u": 399413,
+    "seq": 1598008303
+  },
+  "cts": 1741590064974
+}
+2025-03-10 03:01:05,556 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:01:05,556 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos
+2025-03-10 03:01:05,912 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590065342,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "68276.35",
+        "0.00166"
+      ],
+      [
+        "63925.6",
+        "0"
+      ]
+    ],
+    "a": [],
+    "u": 399414,
+    "seq": 1598008315
+  },
+  "cts": 1741590065323
+}
+2025-03-10 03:01:05,912 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:01:05,912 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos
+2025-03-10 03:01:05,956 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590065385,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2067.341819"
+  }
+}
+2025-03-10 03:01:05,965 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:05,965 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590065388,
+  "type": "snapshot",
+  "cs": 1598008102,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187611",
+    "turnover24h": "1596624149.5266616",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": ""
+  }
+}
+2025-03-10 03:01:05,971 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:05,972 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590065389,
+  "type": "snapshot",
+  "cs": 1598008102,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187611",
+    "turnover24h": "1596624149.5266616",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82322.074878"
+  }
+}
+2025-03-10 03:01:05,978 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:06,957 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590066385,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2067.717"
+  }
+}
+2025-03-10 03:01:06,966 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:06,966 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590066388,
+  "type": "snapshot",
+  "cs": 1598008102,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187611",
+    "turnover24h": "1596624149.5266616",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82339.669482"
+  }
+}
+2025-03-10 03:01:06,973 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:07,612 [⚡ METAL ⚡] 📨 Mensaje: {
+  "success": true,
+  "ret_msg": "pong",
+  "conn_id": "bbfdb815-4657-401a-ada1-8bb89457e5c1",
+  "op": "ping"
+}
+2025-03-10 03:01:07,613 [⚡ METAL ⚡] 📡 Pong recibido
+2025-03-10 03:01:07,731 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590067161,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "67890.18",
+        "0"
+      ],
+      [
+        "63925.6",
+        "0.000065"
+      ]
+    ],
+    "a": [
+      [
+        "79502.37",
+        "0"
+      ],
+      [
+        "81002.6",
+        "0.00122"
+      ]
+    ],
+    "u": 399415,
+    "seq": 1598008333
+  },
+  "cts": 1741590067142
+}
+2025-03-10 03:01:07,731 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:07,956 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590067385,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2067.858306"
+  }
+}
+2025-03-10 03:01:07,965 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:07,965 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590067388,
+  "type": "snapshot",
+  "cs": 1598008102,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187611",
+    "turnover24h": "1596624149.5266616",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82340.754618"
+  }
+}
+2025-03-10 03:01:07,973 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:08,232 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590067662,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "70453.75",
+        "0"
+      ],
+      [
+        "63738.15",
+        "0.000089"
+      ]
+    ],
+    "a": [
+      [
+        "81002.6",
+        "0"
+      ],
+      [
+        "81052.63",
+        "90"
+      ]
+    ],
+    "u": 399416,
+    "seq": 1598008335
+  },
+  "cts": 1741590067641
+}
+2025-03-10 03:01:08,232 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:08,244 [⚡ METAL ⚡] 🤘 Orderbook actualizado para BTCUSDT: Bids=1, Asks=1
+2025-03-10 03:01:08,732 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590068162,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "70603.48",
+        "0"
+      ],
+      [
+        "63674.77",
+        "0.000808"
+      ]
+    ],
+    "a": [
+      [
+        "79354.77",
+        "0"
+      ],
+      [
+        "81105.26",
+        "89.999931"
+      ]
+    ],
+    "u": 399417,
+    "seq": 1598008345
+  },
+  "cts": 1741590068147
+}
+2025-03-10 03:01:08,732 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:08,956 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590068385,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2068.102211"
+  }
+}
+2025-03-10 03:01:08,965 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:08,965 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590068388,
+  "type": "snapshot",
+  "cs": 1598008102,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187611",
+    "turnover24h": "1596624149.5266616",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82346.087285"
+  }
+}
+2025-03-10 03:01:08,972 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:09,231 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590068661,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "68276.35",
+        "0"
+      ],
+      [
+        "62824.53",
+        "0.002663"
+      ]
+    ],
+    "a": [
+      [
+        "80849.25",
+        "0"
+      ],
+      [
+        "81115.79",
+        "0.000068"
+      ]
+    ],
+    "u": 399418,
+    "seq": 1598008347
+  },
+  "cts": 1741590068650
+}
+2025-03-10 03:01:09,232 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:09,511 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590068942,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "71305.84",
+        "0.00134"
+      ],
+      [
+        "62824.53",
+        "0"
+      ]
+    ],
+    "a": [
+      [
+        "79593.29",
+        "0.00144"
+      ],
+      [
+        "81115.79",
+        "0"
+      ]
+    ],
+    "u": 399419,
+    "seq": 1598008349
+  },
+  "cts": 1741590068926
+}
+2025-03-10 03:01:09,512 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:09,852 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590069281,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "69788.22",
+        "0.00143"
+      ],
+      [
+        "63674.77",
+        "0"
+      ]
+    ],
+    "a": [
+      [
+        "78909.82",
+        "0.00148"
+      ],
+      [
+        "81105.26",
+        "0"
+      ]
+    ],
+    "u": 399420,
+    "seq": 1598008359
+  },
+  "cts": 1741590069276
+}
+2025-03-10 03:01:09,852 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:09,961 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590069387,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2067.940495"
+  }
+}
+2025-03-10 03:01:09,969 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:09,969 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590069388,
+  "type": "snapshot",
+  "cs": 1598008102,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187611",
+    "turnover24h": "1596624149.5266616",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82343.692235"
+  }
+}
+2025-03-10 03:01:09,977 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:10,212 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590069641,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "68146.16",
+        "0.00159"
+      ],
+      [
+        "63738.15",
+        "0"
+      ]
+    ],
+    "a": [
+      [
+        "80896.88",
+        "0.00144"
+      ],
+      [
+        "81052.63",
+        "0"
+      ]
+    ],
+    "u": 399421,
+    "seq": 1598008361
+  },
+  "cts": 1741590069627
+}
+2025-03-10 03:01:10,212 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:10,790 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590070219,
+  "type": "snapshot",
+  "cs": 1598008372,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187624",
+    "turnover24h": "1596624150.50402513",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82343.692235"
+  }
+}
+2025-03-10 03:01:10,798 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:10,798 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590070221,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [],
+    "a": [
+      [
+        "75181.81",
+        "59.635315"
+      ]
+    ],
+    "u": 399422,
+    "seq": 1598008372
+  },
+  "cts": 1741590070217
+}
+2025-03-10 03:01:10,798 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=0, Asks=1
+2025-03-10 03:01:10,798 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=0, Asks=1, manteniendo datos previos
+2025-03-10 03:01:10,957 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590070386,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2067.861219"
+  }
+}
+2025-03-10 03:01:10,964 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:10,964 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590070388,
+  "type": "snapshot",
+  "cs": 1598008372,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187624",
+    "turnover24h": "1596624150.50402513",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82344.242554"
+  }
+}
+2025-03-10 03:01:10,970 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:11,140 [⚡ METAL ⚡] 📨 Mensaje: {
+  "type": "snapshot",
+  "topic": "kline.1.BTCUSDT",
+  "data": [
+    {
+      "start": 1741590060000,
+      "end": 1741590119999,
+      "interval": "1",
+      "open": "75181.81",
+      "close": "75181.81",
+      "high": "75181.81",
+      "low": "75181.81",
+      "volume": "0.000013",
+      "turnover": "0.97736353",
+      "confirm": false,
+      "timestamp": 1741590070570
+    }
+  ],
+  "ts": 1741590070570
+}
+2025-03-10 03:01:11,141 [⚡ METAL ⚡] ⚠️ Volumen insuficiente (1.3e-05) en 2025-03-10 07:01:00+00:00 para BTCUSDT, ignorando vela
+2025-03-10 03:01:11,292 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590070721,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [],
+    "a": [
+      [
+        "75181.83",
+        "0"
+      ],
+      [
+        "81052.63",
+        "90"
+      ]
+    ],
+    "u": 399423,
+    "seq": 1598008373
+  },
+  "cts": 1741590070717
+}
+2025-03-10 03:01:11,292 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=0, Asks=2
+2025-03-10 03:01:11,292 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=0, Asks=1, manteniendo datos previos
+2025-03-10 03:01:11,433 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590070862,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [],
+    "a": [
+      [
+        "75181.83",
+        "0.003"
+      ],
+      [
+        "81052.63",
+        "0"
+      ]
+    ],
+    "u": 399424,
+    "seq": 1598008374
+  },
+  "cts": 1741590070855
+}
+2025-03-10 03:01:11,433 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=0, Asks=2
+2025-03-10 03:01:11,433 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=0, Asks=1, manteniendo datos previos
+2025-03-10 03:01:11,957 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590071386,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2068.124227"
+  }
+}
+2025-03-10 03:01:11,967 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:11,967 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590071388,
+  "type": "snapshot",
+  "cs": 1598008372,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187624",
+    "turnover24h": "1596624150.50402513",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82349.575221"
+  }
+}
+2025-03-10 03:01:11,974 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:12,032 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590071462,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "71305.84",
+        "0"
+      ],
+      [
+        "63738.15",
+        "0.000089"
+      ]
+    ],
+    "a": [
+      [
+        "78909.82",
+        "0"
+      ],
+      [
+        "81052.63",
+        "90"
+      ]
+    ],
+    "u": 399425,
+    "seq": 1598008384
+  },
+  "cts": 1741590071446
+}
+2025-03-10 03:01:12,032 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:12,532 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590071962,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "70531.92",
+        "0"
+      ],
+      [
+        "63674.77",
+        "0.000808"
+      ]
+    ],
+    "a": [
+      [
+        "79818.61",
+        "0"
+      ],
+      [
+        "81105.26",
+        "89.999931"
+      ]
+    ],
+    "u": 399426,
+    "seq": 1598008386
+  },
+  "cts": 1741590071948
+}
+2025-03-10 03:01:12,532 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:12,956 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590072385,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2068.059403"
+  }
+}
+2025-03-10 03:01:12,963 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:12,964 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590072388,
+  "type": "snapshot",
+  "cs": 1598008372,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187624",
+    "turnover24h": "1596624150.50402513",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82345.847005"
+  }
+}
+2025-03-10 03:01:12,971 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:13,031 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590072461,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "68055.43",
+        "0"
+      ],
+      [
+        "62824.53",
+        "0.002663"
+      ]
+    ],
+    "a": [],
+    "u": 399427,
+    "seq": 1598008398
+  },
+  "cts": 1741590072445
+}
+2025-03-10 03:01:13,031 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:01:13,031 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos
+2025-03-10 03:01:13,532 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590072962,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "68333.56",
+        "0"
+      ],
+      [
+        "62633.8",
+        "0.000665"
+      ]
+    ],
+    "a": [
+      [
+        "80896.88",
+        "0"
+      ],
+      [
+        "81115.79",
+        "0.000068"
+      ]
+    ],
+    "u": 399428,
+    "seq": 1598008400
+  },
+  "cts": 1741590072947
+}
+2025-03-10 03:01:13,532 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:13,542 [⚡ METAL ⚡] 🤘 Orderbook actualizado para BTCUSDT: Bids=1, Asks=1
+2025-03-10 03:01:13,812 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590073242,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "70700.16",
+        "0.00142"
+      ],
+      [
+        "62633.8",
+        "0"
+      ]
+    ],
+    "a": [
+      [
+        "79814.5",
+        "0.0012"
+      ],
+      [
+        "81115.79",
+        "0"
+      ]
+    ],
+    "u": 399429,
+    "seq": 1598008410
+  },
+  "cts": 1741590073222
+}
+2025-03-10 03:01:13,813 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:13,957 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590073386,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2068.073389"
+  }
+}
+2025-03-10 03:01:13,965 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:13,965 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590073388,
+  "type": "snapshot",
+  "cs": 1598008372,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187624",
+    "turnover24h": "1596624150.50402513",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82349.214801"
+  }
+}
+2025-03-10 03:01:13,972 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:14,151 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590073582,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "69957.47",
+        "0.00166"
+      ],
+      [
+        "62824.53",
+        "0"
+      ]
+    ],
+    "a": [
+      [
+        "80537.06",
+        "0.00119"
+      ],
+      [
+        "81105.26",
+        "0"
+      ]
+    ],
+    "u": 399430,
+    "seq": 1598008412
+  },
+  "cts": 1741590073570
+}
+2025-03-10 03:01:14,151 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:14,492 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590073922,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "68821.81",
+        "0.00152"
+      ],
+      [
+        "63674.77",
+        "0"
+      ]
+    ],
+    "a": [
+      [
+        "80399.11",
+        "0.00145"
+      ],
+      [
+        "81052.63",
+        "0"
+      ]
+    ],
+    "u": 399431,
+    "seq": 1598008414
+  },
+  "cts": 1741590073918
+}
+2025-03-10 03:01:14,492 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:14,851 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590074281,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "68201.84",
+        "0.00133"
+      ],
+      [
+        "63738.15",
+        "0"
+      ]
+    ],
+    "a": [],
+    "u": 399432,
+    "seq": 1598008424
+  },
+  "cts": 1741590074269
+}
+2025-03-10 03:01:14,852 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:01:14,852 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos
+2025-03-10 03:01:14,958 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590074386,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2068.02076"
+  }
+}
+2025-03-10 03:01:14,966 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:15,957 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590075385,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2067.920786"
+  }
+}
+2025-03-10 03:01:15,965 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:16,532 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590075962,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [],
+    "a": [
+      [
+        "75181.83",
+        "0"
+      ],
+      [
+        "81052.63",
+        "90"
+      ]
+    ],
+    "u": 399433,
+    "seq": 1598008433
+  },
+  "cts": 1741590075951
+}
+2025-03-10 03:01:16,532 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=0, Asks=2
+2025-03-10 03:01:16,532 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=0, Asks=1, manteniendo datos previos
+2025-03-10 03:01:16,672 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590076102,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "68821.81",
+        "0"
+      ],
+      [
+        "63738.15",
+        "0.000089"
+      ]
+    ],
+    "a": [
+      [
+        "75181.83",
+        "0.003"
+      ],
+      [
+        "79808.6",
+        "0"
+      ]
+    ],
+    "u": 399434,
+    "seq": 1598008440
+  },
+  "cts": 1741590076089
+}
+2025-03-10 03:01:16,672 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:16,957 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590076386,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2067.974228"
+  }
+}
+2025-03-10 03:01:16,965 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:16,965 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590076388,
+  "type": "snapshot",
+  "cs": 1598008372,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187624",
+    "turnover24h": "1596624150.50402513",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82345.843129"
+  }
+}
+2025-03-10 03:01:16,973 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:17,171 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590076601,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "68201.84",
+        "0"
+      ],
+      [
+        "63674.77",
+        "0.000808"
+      ]
+    ],
+    "a": [],
+    "u": 399435,
+    "seq": 1598008448
+  },
+  "cts": 1741590076590
+}
+2025-03-10 03:01:17,171 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:01:17,171 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos
+2025-03-10 03:01:17,615 [⚡ METAL ⚡] 📨 Mensaje: {
+  "success": true,
+  "ret_msg": "pong",
+  "conn_id": "bbfdb815-4657-401a-ada1-8bb89457e5c1",
+  "op": "ping"
+}
+2025-03-10 03:01:17,615 [⚡ METAL ⚡] 📡 Pong recibido
+2025-03-10 03:01:17,671 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590077101,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "68146.16",
+        "0"
+      ],
+      [
+        "62824.53",
+        "0.002663"
+      ]
+    ],
+    "a": [],
+    "u": 399436,
+    "seq": 1598008456
+  },
+  "cts": 1741590077090
+}
+2025-03-10 03:01:17,671 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:01:17,671 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos
+2025-03-10 03:01:17,951 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590077382,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "68748.75",
+        "0.00137"
+      ],
+      [
+        "62824.53",
+        "0"
+      ]
+    ],
+    "a": [
+      [
+        "79960.8",
+        "0.00108"
+      ],
+      [
+        "81052.63",
+        "0"
+      ]
+    ],
+    "u": 399437,
+    "seq": 1598008462
+  },
+  "cts": 1741590077364
+}
+2025-03-10 03:01:17,952 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:17,962 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590077386,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2068.083568"
+  }
+}
+2025-03-10 03:01:17,969 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:17,969 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590077387,
+  "type": "snapshot",
+  "cs": 1598008372,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187624",
+    "turnover24h": "1596624150.50402513",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82350.396824"
+  }
+}
+2025-03-10 03:01:17,975 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:18,291 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590077721,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "67687.35",
+        "0.00128"
+      ],
+      [
+        "63674.77",
+        "0"
+      ]
+    ],
+    "a": [],
+    "u": 399438,
+    "seq": 1598008464
+  },
+  "cts": 1741590077713
+}
+2025-03-10 03:01:18,291 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:01:18,291 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos
+2025-03-10 03:01:18,652 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590078082,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "68273.87",
+        "0.00132"
+      ],
+      [
+        "63738.15",
+        "0"
+      ]
+    ],
+    "a": [],
+    "u": 399439,
+    "seq": 1598008472
+  },
+  "cts": 1741590078074
+}
+2025-03-10 03:01:18,652 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:01:18,652 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos
+2025-03-10 03:01:18,891 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590078321,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [],
+    "a": [
+      [
+        "75181.83",
+        "0"
+      ],
+      [
+        "81052.63",
+        "90"
+      ]
+    ],
+    "u": 399440,
+    "seq": 1598008477
+  },
+  "cts": 1741590078316
+}
+2025-03-10 03:01:18,891 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=0, Asks=2
+2025-03-10 03:01:18,891 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=0, Asks=1, manteniendo datos previos
+2025-03-10 03:01:18,912 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590078342,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [],
+    "a": [
+      [
+        "75181.83",
+        "0.003"
+      ],
+      [
+        "81052.63",
+        "0"
+      ]
+    ],
+    "u": 399441,
+    "seq": 1598008478
+  },
+  "cts": 1741590078321
+}
+2025-03-10 03:01:18,912 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=0, Asks=2
+2025-03-10 03:01:18,912 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=0, Asks=1, manteniendo datos previos
+2025-03-10 03:01:18,957 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590078386,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2068.16077"
+  }
+}
+2025-03-10 03:01:18,967 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:19,957 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590079386,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2067.809101"
+  }
+}
+2025-03-10 03:01:19,966 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:19,966 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590079388,
+  "type": "snapshot",
+  "cs": 1598008372,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187624",
+    "turnover24h": "1596624150.50402513",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82347.769245"
+  }
+}
+2025-03-10 03:01:19,973 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:20,471 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590079901,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "67687.35",
+        "0"
+      ],
+      [
+        "63738.15",
+        "0.000089"
+      ]
+    ],
+    "a": [
+      [
+        "80399.11",
+        "0"
+      ],
+      [
+        "81052.63",
+        "90"
+      ]
+    ],
+    "u": 399442,
+    "seq": 1598008488
+  },
+  "cts": 1741590079881
+}
+2025-03-10 03:01:20,471 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:20,481 [⚡ METAL ⚡] 🤘 Orderbook actualizado para BTCUSDT: Bids=1, Asks=1
+2025-03-10 03:01:20,957 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590080386,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2067.841645"
+  }
+}
+2025-03-10 03:01:20,966 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:20,977 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590080401,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "69788.22",
+        "0"
+      ],
+      [
+        "63674.77",
+        "0.000808"
+      ]
+    ],
+    "a": [
+      [
+        "79814.5",
+        "0"
+      ],
+      [
+        "81105.26",
+        "89.999931"
+      ]
+    ],
+    "u": 399443,
+    "seq": 1598008499
+  },
+  "cts": 1741590080383
+}
+2025-03-10 03:01:20,977 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:21,472 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590080902,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "69957.47",
+        "0"
+      ],
+      [
+        "62824.53",
+        "0.002663"
+      ]
+    ],
+    "a": [
+      [
+        "79960.8",
+        "0"
+      ],
+      [
+        "81115.79",
+        "0.000068"
+      ]
+    ],
+    "u": 399444,
+    "seq": 1598008501
+  },
+  "cts": 1741590080884
+}
+2025-03-10 03:01:21,472 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:21,731 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590081161,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "70037.7",
+        "0.0012"
+      ],
+      [
+        "62824.53",
+        "0"
+      ]
+    ],
+    "a": [
+      [
+        "80047.82",
+        "0.00108"
+      ],
+      [
+        "81115.79",
+        "0"
+      ]
+    ],
+    "u": 399445,
+    "seq": 1598008511
+  },
+  "cts": 1741590081158
+}
+2025-03-10 03:01:21,731 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:21,958 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590081387,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2067.680575"
+  }
+}
+2025-03-10 03:01:21,967 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:22,091 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590081521,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "69240.83",
+        "0.0015"
+      ],
+      [
+        "63674.77",
+        "0"
+      ]
+    ],
+    "a": [
+      [
+        "80114.27",
+        "0.00117"
+      ],
+      [
+        "81105.26",
+        "0"
+      ]
+    ],
+    "u": 399446,
+    "seq": 1598008513
+  },
+  "cts": 1741590081506
+}
+2025-03-10 03:01:22,091 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:22,431 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590081862,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "68079.74",
+        "0.00176"
+      ],
+      [
+        "63738.15",
+        "0"
+      ]
+    ],
+    "a": [
+      [
+        "81010.3",
+        "0.00129"
+      ],
+      [
+        "81052.63",
+        "0"
+      ]
+    ],
+    "u": 399447,
+    "seq": 1598008515
+  },
+  "cts": 1741590081855
+}
+2025-03-10 03:01:22,432 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:22,958 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590082386,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2067.862956"
+  }
+}
+2025-03-10 03:01:22,966 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:22,966 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590082387,
+  "type": "snapshot",
+  "cs": 1598008372,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187624",
+    "turnover24h": "1596624150.50402513",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82357.947816"
+  }
+}
+2025-03-10 03:01:22,974 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:23,957 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590083385,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2067.932401"
+  }
+}
+2025-03-10 03:01:23,966 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:23,966 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590083388,
+  "type": "snapshot",
+  "cs": 1598008372,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187624",
+    "turnover24h": "1596624150.50402513",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82355.529514"
+  }
+}
+2025-03-10 03:01:23,973 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:24,611 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590084041,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "70361.33",
+        "0"
+      ],
+      [
+        "63738.15",
+        "0.000089"
+      ]
+    ],
+    "a": [],
+    "u": 399448,
+    "seq": 1598008534
+  },
+  "cts": 1741590084027
+}
+2025-03-10 03:01:24,611 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:01:24,611 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos
+2025-03-10 03:01:24,959 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590084387,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2067.953883"
+  }
+}
+2025-03-10 03:01:24,968 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:24,969 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590084388,
+  "type": "snapshot",
+  "cs": 1598008372,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187624",
+    "turnover24h": "1596624150.50402513",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82354.545141"
+  }
+}
+2025-03-10 03:01:24,976 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:25,112 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590084542,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "68079.74",
+        "0"
+      ],
+      [
+        "63674.77",
+        "0.000808"
+      ]
+    ],
+    "a": [],
+    "u": 399449,
+    "seq": 1598008544
+  },
+  "cts": 1741590084527
+}
+2025-03-10 03:01:25,112 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:01:25,112 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos
+2025-03-10 03:01:25,611 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590085041,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "68273.87",
+        "0"
+      ],
+      [
+        "62824.53",
+        "0.002663"
+      ]
+    ],
+    "a": [
+      [
+        "80114.27",
+        "0"
+      ],
+      [
+        "81052.63",
+        "90"
+      ]
+    ],
+    "u": 399450,
+    "seq": 1598008546
+  },
+  "cts": 1741590085025
+}
+2025-03-10 03:01:25,611 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:25,623 [⚡ METAL ⚡] 🤘 Orderbook actualizado para BTCUSDT: Bids=1, Asks=1
+2025-03-10 03:01:25,958 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590085387,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2068.084475"
+  }
+}
+2025-03-10 03:01:25,967 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:25,967 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590085388,
+  "type": "snapshot",
+  "cs": 1598008372,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187624",
+    "turnover24h": "1596624150.50402513",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82357.692034"
+  }
+}
+2025-03-10 03:01:25,975 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:26,111 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590085541,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [],
+    "a": [
+      [
+        "81010.3",
+        "0"
+      ],
+      [
+        "81105.26",
+        "89.999931"
+      ]
+    ],
+    "u": 399451,
+    "seq": 1598008555
+  },
+  "cts": 1741590085526
+}
+2025-03-10 03:01:26,111 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=0, Asks=2
+2025-03-10 03:01:26,111 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=0, Asks=1, manteniendo datos previos
+2025-03-10 03:01:26,391 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590085821,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "70042.24",
+        "0.00171"
+      ],
+      [
+        "62824.53",
+        "0"
+      ]
+    ],
+    "a": [
+      [
+        "79708.82",
+        "0.0015"
+      ],
+      [
+        "81105.26",
+        "0"
+      ]
+    ],
+    "u": 399452,
+    "seq": 1598008559
+  },
+  "cts": 1741590085802
+}
+2025-03-10 03:01:26,391 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:26,751 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590086181,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "70158.46",
+        "0.00141"
+      ],
+      [
+        "63674.77",
+        "0"
+      ]
+    ],
+    "a": [
+      [
+        "79610.88",
+        "0.00128"
+      ],
+      [
+        "81052.63",
+        "0"
+      ]
+    ],
+    "u": 399453,
+    "seq": 1598008569
+  },
+  "cts": 1741590086162
+}
+2025-03-10 03:01:26,751 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:26,958 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590086386,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2068.058752"
+  }
+}
+2025-03-10 03:01:26,965 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:26,966 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590086388,
+  "type": "snapshot",
+  "cs": 1598008372,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187624",
+    "turnover24h": "1596624150.50402513",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82357.974945"
+  }
+}
+2025-03-10 03:01:26,974 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:27,092 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590086521,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "67693.29",
+        "0.00136"
+      ],
+      [
+        "63738.15",
+        "0"
+      ]
+    ],
+    "a": [],
+    "u": 399454,
+    "seq": 1598008570
+  },
+  "cts": 1741590086512
+}
+2025-03-10 03:01:27,092 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:01:27,092 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos
+2025-03-10 03:01:27,232 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590086662,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [],
+    "a": [
+      [
+        "80658.83",
+        "0.00102"
+      ],
+      [
+        "81000",
+        "0"
+      ]
+    ],
+    "u": 399455,
+    "seq": 1598008571
+  },
+  "cts": 1741590086649
+}
+2025-03-10 03:01:27,232 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=0, Asks=2
+2025-03-10 03:01:27,232 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=0, Asks=1, manteniendo datos previos
+2025-03-10 03:01:27,614 [⚡ METAL ⚡] 📨 Mensaje: {
+  "success": true,
+  "ret_msg": "pong",
+  "conn_id": "bbfdb815-4657-401a-ada1-8bb89457e5c1",
+  "op": "ping"
+}
+2025-03-10 03:01:27,614 [⚡ METAL ⚡] 📡 Pong recibido
+2025-03-10 03:01:27,958 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590087386,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2068.003828"
+  }
+}
+2025-03-10 03:01:27,965 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:27,966 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590087388,
+  "type": "snapshot",
+  "cs": 1598008372,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187624",
+    "turnover24h": "1596624150.50402513",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82355.141965"
+  }
+}
+2025-03-10 03:01:27,973 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:28,958 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590088386,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2068.051521"
+  }
+}
+2025-03-10 03:01:28,965 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:28,965 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590088388,
+  "type": "snapshot",
+  "cs": 1598008372,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187624",
+    "turnover24h": "1596624150.50402513",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82359.110462"
+  }
+}
+2025-03-10 03:01:28,972 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:29,532 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590088962,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "70905.36",
+        "0"
+      ],
+      [
+        "63738.15",
+        "0.000089"
+      ]
+    ],
+    "a": [
+      [
+        "79343.28",
+        "0"
+      ],
+      [
+        "81000",
+        "25.68585"
+      ]
+    ],
+    "u": 399456,
+    "seq": 1598008590
+  },
+  "cts": 1741590088960
+}
+2025-03-10 03:01:29,532 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:29,958 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590089387,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2068.237784"
+  }
+}
+2025-03-10 03:01:29,966 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:29,966 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590089388,
+  "type": "snapshot",
+  "cs": 1598008372,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187624",
+    "turnover24h": "1596624150.50402513",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82367.960514"
+  }
+}
+2025-03-10 03:01:29,973 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:30,051 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590089482,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [],
+    "a": [
+      [
+        "80047.82",
+        "0"
+      ],
+      [
+        "81052.63",
+        "90"
+      ]
+    ],
+    "u": 399457,
+    "seq": 1598008599
+  },
+  "cts": 1741590089464
+}
+2025-03-10 03:01:30,051 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=0, Asks=2
+2025-03-10 03:01:30,052 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=0, Asks=1, manteniendo datos previos
+2025-03-10 03:01:30,171 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590089602,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "70700.16",
+        "0"
+      ],
+      [
+        "63674.77",
+        "0.000808"
+      ]
+    ],
+    "a": [],
+    "u": 399458,
+    "seq": 1598008600
+  },
+  "cts": 1741590089596
+}
+2025-03-10 03:01:30,172 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:01:30,172 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos
+2025-03-10 03:01:30,552 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590089981,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [],
+    "a": [
+      [
+        "80537.06",
+        "0"
+      ],
+      [
+        "81105.26",
+        "89.999931"
+      ]
+    ],
+    "u": 399459,
+    "seq": 1598008601
+  },
+  "cts": 1741590089977
+}
+2025-03-10 03:01:30,552 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=0, Asks=2
+2025-03-10 03:01:30,552 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=0, Asks=1, manteniendo datos previos
+2025-03-10 03:01:30,672 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590090102,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "67693.29",
+        "0"
+      ],
+      [
+        "62824.53",
+        "0.002663"
+      ]
+    ],
+    "a": [],
+    "u": 399460,
+    "seq": 1598008606
+  },
+  "cts": 1741590090095
+}
+2025-03-10 03:01:30,672 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:01:30,672 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos
+2025-03-10 03:01:30,957 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590090386,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2068.242082"
+  }
+}
+2025-03-10 03:01:30,966 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:31,324 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590090754,
+  "type": "snapshot",
+  "cs": 1598008614,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75000",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187757",
+    "turnover24h": "1596624160.47902513",
+    "price24hPcnt": "-0.2117",
+    "usdIndexPrice": "82367.960514"
+  }
+}
+2025-03-10 03:01:31,333 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75000.0
+2025-03-10 03:01:31,333 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590090762,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "75000",
+        "15193.125964"
+      ],
+      [
+        "70856.56",
+        "0.00117"
+      ],
+      [
+        "62824.53",
+        "0"
+      ]
+    ],
+    "a": [
+      [
+        "79258.66",
+        "0.00121"
+      ],
+      [
+        "81105.26",
+        "0"
+      ]
+    ],
+    "u": 399461,
+    "seq": 1598008614
+  },
+  "cts": 1741590090752
+}
+2025-03-10 03:01:31,333 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=3, Asks=2
+2025-03-10 03:01:31,343 [⚡ METAL ⚡] 🤘 Orderbook actualizado para BTCUSDT: Bids=2, Asks=1
+2025-03-10 03:01:31,691 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590091121,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "70680.54",
+        "0.00138"
+      ],
+      [
+        "63674.77",
+        "0"
+      ]
+    ],
+    "a": [
+      [
+        "80675.69",
+        "0.00147"
+      ],
+      [
+        "81052.63",
+        "0"
+      ]
+    ],
+    "u": 399462,
+    "seq": 1598008620
+  },
+  "cts": 1741590091114
+}
+2025-03-10 03:01:31,691 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:31,957 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590091386,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2068.518094"
+  }
+}
+2025-03-10 03:01:31,966 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:31,966 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590091388,
+  "type": "snapshot",
+  "cs": 1598008614,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75000",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187757",
+    "turnover24h": "1596624160.47902513",
+    "price24hPcnt": "-0.2117",
+    "usdIndexPrice": "82370.673354"
+  }
+}
+2025-03-10 03:01:31,973 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75000.0
+2025-03-10 03:01:32,031 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590091461,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "68005.74",
+        "0.00175"
+      ],
+      [
+        "63738.15",
+        "0"
+      ]
+    ],
+    "a": [],
+    "u": 399463,
+    "seq": 1598008626
+  },
+  "cts": 1741590091453
+}
+2025-03-10 03:01:32,031 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:01:32,031 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos
+2025-03-10 03:01:32,139 [⚡ METAL ⚡] 📨 Mensaje: {
+  "type": "snapshot",
+  "topic": "kline.1.BTCUSDT",
+  "data": [
+    {
+      "start": 1741590060000,
+      "end": 1741590119999,
+      "interval": "1",
+      "open": "75181.81",
+      "close": "75000",
+      "high": "75181.81",
+      "low": "75000",
+      "volume": "0.000146",
+      "turnover": "10.95236353",
+      "confirm": false,
+      "timestamp": 1741590091569
+    }
+  ],
+  "ts": 1741590091569
+}
+2025-03-10 03:01:32,150 [⚡ METAL ⚡] Métricas calculadas: combined=-25.41, ild=-0.0316, egm=-0.8000, rol=-0.0974, pio=-0.3257, ogm=0.0000
+2025-03-10 03:01:32,150 [⚡ METAL ⚡] 📊 Métricas para BTCUSDT: {'combined': np.float64(-25.409058761143456), 'ild': -0.031567870922483345, 'egm': np.float64(-0.800000000000032), 'rol': -0.09741305827892022, 'pio': np.float64(-0.32568807339449546), 'ogm': np.float64(0.0)}
+2025-03-10 03:01:32,150 [⚡ METAL ⚡] 🔍 EGM para BTCUSDT: -0.800000000000032
+2025-03-10 03:01:32,151 [⚡ METAL ⚡] 🔍 Decisión para BTCUSDT: hold
+2025-03-10 03:01:32,151 [⚡ METAL ⚡] 📉 Volumen insuficiente para BTCUSDT: 0.000146, skipping trade
+2025-03-10 03:01:32,152 [⚡ METAL ⚡] 📈 Resultados guardados en C:\Users\Angel Gabriel\PycharmProjects\NerTzh_\logs\results_consolidated.json
+2025-03-10 03:01:32,152 [⚡ METAL ⚡] 📊 Resultados guardados: Total PNL=0.0 USDT, Capital=50000.00 USDT
+2025-03-10 03:01:32,152 [⚡ METAL ⚡] ⚡ Kline para BTCUSDT: 2025-03-10 07:01:00+00:00, Close: 75000.0, Volume: 0.000146
+2025-03-10 03:01:32,958 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590092386,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2068.591095"
+  }
+}
+2025-03-10 03:01:32,966 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:33,622 [⚡ METAL ⚡] 📨 Mensaje: {
+  "type": "snapshot",
+  "topic": "kline.1.ETHUSDT",
+  "data": [
+    {
+      "start": 1741590060000,
+      "end": 1741590119999,
+      "interval": "1",
+      "open": "2091.55",
+      "close": "2091.55",
+      "high": "2091.55",
+      "low": "2091.55",
+      "volume": "0",
+      "turnover": "0",
+      "confirm": false,
+      "timestamp": 1741590093052
+    }
+  ],
+  "ts": 1741590093052
+}
+2025-03-10 03:01:33,624 [⚡ METAL ⚡] ⚠️ Volumen insuficiente (0.0) en 2025-03-10 07:01:00+00:00 para ETHUSDT, ignorando vela
+2025-03-10 03:01:33,911 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590093341,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "70158.46",
+        "0"
+      ],
+      [
+        "63738.15",
+        "0.000089"
+      ]
+    ],
+    "a": [],
+    "u": 399464,
+    "seq": 1598008643
+  },
+  "cts": 1741590093331
+}
+2025-03-10 03:01:33,911 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:01:33,911 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos
+2025-03-10 03:01:33,956 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590093385,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2068.670016"
+  }
+}
+2025-03-10 03:01:33,965 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:33,965 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590093388,
+  "type": "snapshot",
+  "cs": 1598008614,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75000",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187757",
+    "turnover24h": "1596624160.47902513",
+    "price24hPcnt": "-0.2117",
+    "usdIndexPrice": "82375.990519"
+  }
+}
+2025-03-10 03:01:33,971 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75000.0
+2025-03-10 03:01:34,052 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590093481,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [],
+    "a": [
+      [
+        "79708.82",
+        "0"
+      ],
+      [
+        "81052.63",
+        "90"
+      ]
+    ],
+    "u": 399465,
+    "seq": 1598008644
+  },
+  "cts": 1741590093466
+}
+2025-03-10 03:01:34,052 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=0, Asks=2
+2025-03-10 03:01:34,052 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=0, Asks=1, manteniendo datos previos
+2025-03-10 03:01:34,411 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590093841,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "68748.75",
+        "0"
+      ],
+      [
+        "63674.77",
+        "0.000808"
+      ]
+    ],
+    "a": [],
+    "u": 399466,
+    "seq": 1598008647
+  },
+  "cts": 1741590093831
+}
+2025-03-10 03:01:34,411 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:01:34,411 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos
+2025-03-10 03:01:34,612 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590094042,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [],
+    "a": [
+      [
+        "75181.83",
+        "0.006"
+      ]
+    ],
+    "u": 399467,
+    "seq": 1598008649
+  },
+  "cts": 1741590094039
+}
+2025-03-10 03:01:34,612 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=0, Asks=1
+2025-03-10 03:01:34,612 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=0, Asks=1, manteniendo datos previos
+2025-03-10 03:01:34,631 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590094061,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [],
+    "a": [
+      [
+        "75181.83",
+        "0.003"
+      ]
+    ],
+    "u": 399468,
+    "seq": 1598008654
+  },
+  "cts": 1741590094049
+}
+2025-03-10 03:01:34,631 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=0, Asks=1
+2025-03-10 03:01:34,631 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=0, Asks=1, manteniendo datos previos
+2025-03-10 03:01:34,932 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590094362,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "69449.97",
+        "0"
+      ],
+      [
+        "62824.53",
+        "0.002663"
+      ]
+    ],
+    "a": [],
+    "u": 399469,
+    "seq": 1598008659
+  },
+  "cts": 1741590094345
+}
+2025-03-10 03:01:34,932 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:01:34,932 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos
+2025-03-10 03:01:34,958 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590094387,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2068.616469"
+  }
+}
+2025-03-10 03:01:34,965 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:34,965 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590094388,
+  "type": "snapshot",
+  "cs": 1598008614,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75000",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187757",
+    "turnover24h": "1596624160.47902513",
+    "price24hPcnt": "-0.2117",
+    "usdIndexPrice": "82376.564091"
+  }
+}
+2025-03-10 03:01:34,973 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75000.0
+2025-03-10 03:01:35,071 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590094501,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [],
+    "a": [
+      [
+        "80658.83",
+        "0"
+      ],
+      [
+        "81105.26",
+        "89.999931"
+      ]
+    ],
+    "u": 399470,
+    "seq": 1598008660
+  },
+  "cts": 1741590094491
+}
+2025-03-10 03:01:35,071 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=0, Asks=2
+2025-03-10 03:01:35,071 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=0, Asks=1, manteniendo datos previos
+2025-03-10 03:01:35,352 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590094782,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "71190.93",
+        "0.0013"
+      ],
+      [
+        "62824.53",
+        "0"
+      ]
+    ],
+    "a": [
+      [
+        "80176.51",
+        "0.00143"
+      ],
+      [
+        "81105.26",
+        "0"
+      ]
+    ],
+    "u": 399471,
+    "seq": 1598008662
+  },
+  "cts": 1741590094766
+}
+2025-03-10 03:01:35,352 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:35,691 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590095121,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "69509.68",
+        "0.00147"
+      ],
+      [
+        "63674.77",
+        "0"
+      ]
+    ],
+    "a": [
+      [
+        "80972.11",
+        "0.00143"
+      ],
+      [
+        "81052.63",
+        "0"
+      ]
+    ],
+    "u": 399472,
+    "seq": 1598008668
+  },
+  "cts": 1741590095115
+}
+2025-03-10 03:01:35,691 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:35,956 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590095385,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2068.54965"
+  }
+}
+2025-03-10 03:01:35,963 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:35,964 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590095388,
+  "type": "snapshot",
+  "cs": 1598008614,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75000",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187757",
+    "turnover24h": "1596624160.47902513",
+    "price24hPcnt": "-0.2117",
+    "usdIndexPrice": "82378.405667"
+  }
+}
+2025-03-10 03:01:35,970 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75000.0
+2025-03-10 03:01:36,051 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590095482,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "69061.33",
+        "0.0013"
+      ],
+      [
+        "63738.15",
+        "0"
+      ]
+    ],
+    "a": [],
+    "u": 399473,
+    "seq": 1598008674
+  },
+  "cts": 1741590095465
+}
+2025-03-10 03:01:36,051 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:01:36,051 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos
+2025-03-10 03:01:36,392 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590095822,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "67908.49",
+        "0.00165"
+      ],
+      [
+        "63925.6",
+        "0"
+      ]
+    ],
+    "a": [],
+    "u": 399474,
+    "seq": 1598008675
+  },
+  "cts": 1741590095816
+}
+2025-03-10 03:01:36,392 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:01:36,392 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos
+2025-03-10 03:01:36,691 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590096121,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [],
+    "a": [
+      [
+        "75140.04",
+        "0.000133"
+      ],
+      [
+        "81000",
+        "0"
+      ]
+    ],
+    "u": 399475,
+    "seq": 1598008680
+  },
+  "cts": 1741590096102
+}
+2025-03-10 03:01:36,691 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=0, Asks=2
+2025-03-10 03:01:36,691 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=0, Asks=1, manteniendo datos previos
+2025-03-10 03:01:36,958 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590096386,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2068.557231"
+  }
+}
+2025-03-10 03:01:36,967 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:37,614 [⚡ METAL ⚡] 📨 Mensaje: {
+  "success": true,
+  "ret_msg": "pong",
+  "conn_id": "bbfdb815-4657-401a-ada1-8bb89457e5c1",
+  "op": "ping"
+}
+2025-03-10 03:01:37,615 [⚡ METAL ⚡] 📡 Pong recibido
+2025-03-10 03:01:37,952 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590097382,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [],
+    "a": [
+      [
+        "75223.58",
+        "0.000133"
+      ],
+      [
+        "80999.73",
+        "0"
+      ]
+    ],
+    "u": 399476,
+    "seq": 1598008695
+  },
+  "cts": 1741590097372
+}
+2025-03-10 03:01:37,952 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=0, Asks=2
+2025-03-10 03:01:37,952 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=0, Asks=1, manteniendo datos previos
+2025-03-10 03:01:37,959 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590097387,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2068.793185"
+  }
+}
+2025-03-10 03:01:37,967 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:37,967 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590097388,
+  "type": "snapshot",
+  "cs": 1598008614,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75000",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187757",
+    "turnover24h": "1596624160.47902513",
+    "price24hPcnt": "-0.2117",
+    "usdIndexPrice": "82384.691704"
+  }
+}
+2025-03-10 03:01:37,973 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75000.0
+2025-03-10 03:01:38,212 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590097642,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "69509.68",
+        "0"
+      ],
+      [
+        "63925.6",
+        "0.000065"
+      ]
+    ],
+    "a": [
+      [
+        "80972.11",
+        "0"
+      ],
+      [
+        "80999.73",
+        "0.007341"
+      ]
+    ],
+    "u": 399477,
+    "seq": 1598008697
+  },
+  "cts": 1741590097637
+}
+2025-03-10 03:01:38,212 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:38,221 [⚡ METAL ⚡] 🤘 Orderbook actualizado para BTCUSDT: Bids=1, Asks=1
+2025-03-10 03:01:38,711 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590098141,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "70856.56",
+        "0"
+      ],
+      [
+        "63738.15",
+        "0.000089"
+      ]
+    ],
+    "a": [
+      [
+        "79258.66",
+        "0"
+      ],
+      [
+        "81000",
+        "25.68585"
+      ]
+    ],
+    "u": 399478,
+    "seq": 1598008703
+  },
+  "cts": 1741590098138
+}
+2025-03-10 03:01:38,711 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:38,957 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590098386,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2069.011468"
+  }
+}
+2025-03-10 03:01:38,966 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:38,966 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590098388,
+  "type": "snapshot",
+  "cs": 1598008614,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75000",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187757",
+    "turnover24h": "1596624160.47902513",
+    "price24hPcnt": "-0.2117",
+    "usdIndexPrice": "82384.614194"
+  }
+}
+2025-03-10 03:01:38,974 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75000.0
+2025-03-10 03:01:39,231 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590098661,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "70037.7",
+        "0"
+      ],
+      [
+        "63674.77",
+        "0.000808"
+      ]
+    ],
+    "a": [],
+    "u": 399479,
+    "seq": 1598008708
+  },
+  "cts": 1741590098643
+}
+2025-03-10 03:01:39,231 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:01:39,231 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos
+2025-03-10 03:01:39,731 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590099161,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "68005.74",
+        "0"
+      ],
+      [
+        "62824.53",
+        "0.002663"
+      ]
+    ],
+    "a": [],
+    "u": 399480,
+    "seq": 1598008718
+  },
+  "cts": 1741590099145
+}
+2025-03-10 03:01:39,731 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:01:39,731 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos
+2025-03-10 03:01:39,960 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590099387,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2069.095014"
+  }
+}
+2025-03-10 03:01:39,969 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:39,969 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590099388,
+  "type": "snapshot",
+  "cs": 1598008614,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75000",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.187757",
+    "turnover24h": "1596624160.47902513",
+    "price24hPcnt": "-0.2117",
+    "usdIndexPrice": "82382.509806"
+  }
+}
+2025-03-10 03:01:39,975 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75000.0
+2025-03-10 03:01:40,011 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590099442,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "71206.22",
+        "0.00128"
+      ],
+      [
+        "62824.53",
+        "0"
+      ]
+    ],
+    "a": [
+      [
+        "79547.81",
+        "0.00118"
+      ],
+      [
+        "81000",
+        "0"
+      ]
+    ],
+    "u": 399481,
+    "seq": 1598008720
+  },
+  "cts": 1741590099425
+}
+2025-03-10 03:01:40,011 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:40,352 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590099782,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "69363.93",
+        "0.00144"
+      ],
+      [
+        "63674.77",
+        "0"
+      ]
+    ],
+    "a": [
+      [
+        "79107.81",
+        "0.00124"
+      ],
+      [
+        "80999.73",
+        "0"
+      ]
+    ],
+    "u": 399482,
+    "seq": 1598008722
+  },
+  "cts": 1741590099775
+}
+2025-03-10 03:01:40,352 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:40,712 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590100142,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "69048.95",
+        "0.00155"
+      ],
+      [
+        "63738.15",
+        "0"
+      ]
+    ],
+    "a": [],
+    "u": 399483,
+    "seq": 1598008732
+  },
+  "cts": 1741590100137
+}
+2025-03-10 03:01:40,712 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:01:40,712 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos
+2025-03-10 03:01:40,957 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590100386,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2069.015486"
+  }
+}
+2025-03-10 03:01:40,966 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:41,958 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590101387,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2068.870124"
+  }
+}
+2025-03-10 03:01:41,966 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:42,527 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590101954,
+  "type": "snapshot",
+  "cs": 1598008741,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.188045",
+    "turnover24h": "1596624182.125831",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82382.509806"
+  }
+}
+2025-03-10 03:01:42,534 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:42,535 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590101962,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "69061.33",
+        "0"
+      ],
+      [
+        "63738.15",
+        "0.000089"
+      ]
+    ],
+    "a": [
+      [
+        "75140.04",
+        "0"
+      ],
+      [
+        "75181.81",
+        "59.63516"
+      ],
+      [
+        "80999.73",
+        "0.007341"
+      ]
+    ],
+    "u": 399484,
+    "seq": 1598008743
+  },
+  "cts": 1741590101954
+}
+2025-03-10 03:01:42,535 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=3
+2025-03-10 03:01:42,611 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590102041,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [],
+    "a": [
+      [
+        "75140.06",
+        "0.003"
+      ],
+      [
+        "80999.73",
+        "0"
+      ]
+    ],
+    "u": 399485,
+    "seq": 1598008744
+  },
+  "cts": 1741590102037
+}
+2025-03-10 03:01:42,611 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=0, Asks=2
+2025-03-10 03:01:42,611 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=0, Asks=1, manteniendo datos previos
+2025-03-10 03:01:42,631 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590102062,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [],
+    "a": [
+      [
+        "75181.83",
+        "0"
+      ],
+      [
+        "80999.73",
+        "0.007341"
+      ]
+    ],
+    "u": 399486,
+    "seq": 1598008749
+  },
+  "cts": 1741590102046
+}
+2025-03-10 03:01:42,631 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=0, Asks=2
+2025-03-10 03:01:42,631 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=0, Asks=1, manteniendo datos previos
+2025-03-10 03:01:42,956 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590102385,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2068.724585"
+  }
+}
+2025-03-10 03:01:42,964 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:42,965 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590102388,
+  "type": "snapshot",
+  "cs": 1598008741,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.188045",
+    "turnover24h": "1596624182.125831",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82386.366333"
+  }
+}
+2025-03-10 03:01:42,972 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:43,031 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590102461,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "70680.54",
+        "0"
+      ],
+      [
+        "63674.77",
+        "0.000808"
+      ]
+    ],
+    "a": [],
+    "u": 399487,
+    "seq": 1598008755
+  },
+  "cts": 1741590102455
+}
+2025-03-10 03:01:43,031 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:01:43,031 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos
+2025-03-10 03:01:43,139 [⚡ METAL ⚡] 📨 Mensaje: {
+  "type": "snapshot",
+  "topic": "kline.1.BTCUSDT",
+  "data": [
+    {
+      "start": 1741590060000,
+      "end": 1741590119999,
+      "interval": "1",
+      "open": "75181.81",
+      "close": "75181.81",
+      "high": "75181.81",
+      "low": "75000",
+      "volume": "0.000434",
+      "turnover": "32.5991694",
+      "confirm": false,
+      "timestamp": 1741590102570
+    }
+  ],
+  "ts": 1741590102570
+}
+2025-03-10 03:01:43,532 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590102962,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "69048.95",
+        "0"
+      ],
+      [
+        "62824.53",
+        "0.002663"
+      ]
+    ],
+    "a": [],
+    "u": 399488,
+    "seq": 1598008757
+  },
+  "cts": 1741590102959
+}
+2025-03-10 03:01:43,532 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:01:43,532 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos
+2025-03-10 03:01:43,812 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590103242,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "70710.67",
+        "0.00113"
+      ],
+      [
+        "62824.53",
+        "0"
+      ]
+    ],
+    "a": [
+      [
+        "79571.23",
+        "0.00129"
+      ],
+      [
+        "80999.73",
+        "0"
+      ]
+    ],
+    "u": 399489,
+    "seq": 1598008767
+  },
+  "cts": 1741590103233
+}
+2025-03-10 03:01:43,812 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:43,823 [⚡ METAL ⚡] 🤘 Orderbook actualizado para BTCUSDT: Bids=1, Asks=1
+2025-03-10 03:01:43,960 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590103388,
+  "type": "snapshot",
+  "cs": 1598008741,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.188045",
+    "turnover24h": "1596624182.125831",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82390.966533"
+  }
+}
+2025-03-10 03:01:43,968 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:43,968 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590103387,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2069.009292"
+  }
+}
+2025-03-10 03:01:43,976 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:44,175 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590103601,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "68472.65",
+        "0.00144"
+      ],
+      [
+        "63674.77",
+        "0"
+      ]
+    ],
+    "a": [],
+    "u": 399490,
+    "seq": 1598008769
+  },
+  "cts": 1741590103583
+}
+2025-03-10 03:01:44,175 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:01:44,175 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos
+2025-03-10 03:01:44,513 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590103942,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "68744.17",
+        "0.00131"
+      ],
+      [
+        "63738.15",
+        "0"
+      ]
+    ],
+    "a": [],
+    "u": 399491,
+    "seq": 1598008771
+  },
+  "cts": 1741590103933
+}
+2025-03-10 03:01:44,513 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:01:44,513 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos
+2025-03-10 03:01:44,771 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590104201,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [],
+    "a": [
+      [
+        "75140.06",
+        "0"
+      ],
+      [
+        "75181.83",
+        "0.003"
+      ]
+    ],
+    "u": 399492,
+    "seq": 1598008781
+  },
+  "cts": 1741590104194
+}
+2025-03-10 03:01:44,771 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=0, Asks=2
+2025-03-10 03:01:44,771 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=0, Asks=1, manteniendo datos previos
+2025-03-10 03:01:44,959 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590104388,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2068.990598"
+  }
+}
+2025-03-10 03:01:44,966 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:45,018 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590104441,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [],
+    "a": [
+      [
+        "75181.83",
+        "0"
+      ],
+      [
+        "80999.73",
+        "0.007341"
+      ]
+    ],
+    "u": 399493,
+    "seq": 1598008784
+  },
+  "cts": 1741590104430
+}
+2025-03-10 03:01:45,018 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=0, Asks=2
+2025-03-10 03:01:45,018 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=0, Asks=1, manteniendo datos previos
+2025-03-10 03:01:45,035 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590104462,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [],
+    "a": [
+      [
+        "75181.83",
+        "0.003"
+      ],
+      [
+        "80999.73",
+        "0"
+      ]
+    ],
+    "u": 399494,
+    "seq": 1598008785
+  },
+  "cts": 1741590104440
+}
+2025-03-10 03:01:45,035 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=0, Asks=2
+2025-03-10 03:01:45,035 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=0, Asks=1, manteniendo datos previos
+2025-03-10 03:01:45,956 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590105385,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2068.686739"
+  }
+}
+2025-03-10 03:01:45,964 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:45,965 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590105388,
+  "type": "snapshot",
+  "cs": 1598008741,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.188045",
+    "turnover24h": "1596624182.125831",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82386.885648"
+  }
+}
+2025-03-10 03:01:45,972 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:46,232 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590105662,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [],
+    "a": [
+      [
+        "75181.83",
+        "0.006"
+      ]
+    ],
+    "u": 399495,
+    "seq": 1598008794
+  },
+  "cts": 1741590105658
+}
+2025-03-10 03:01:46,232 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=0, Asks=1
+2025-03-10 03:01:46,232 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=0, Asks=1, manteniendo datos previos
+2025-03-10 03:01:46,354 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590105781,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "69240.83",
+        "0"
+      ],
+      [
+        "63738.15",
+        "0.000089"
+      ]
+    ],
+    "a": [
+      [
+        "79610.88",
+        "0"
+      ],
+      [
+        "80999.73",
+        "0.007341"
+      ]
+    ],
+    "u": 399496,
+    "seq": 1598008796
+  },
+  "cts": 1741590105763
+}
+2025-03-10 03:01:46,354 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:46,371 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590105802,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [],
+    "a": [
+      [
+        "75181.83",
+        "0.003"
+      ]
+    ],
+    "u": 399497,
+    "seq": 1598008797
+  },
+  "cts": 1741590105795
+}
+2025-03-10 03:01:46,372 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=0, Asks=1
+2025-03-10 03:01:46,372 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=0, Asks=1, manteniendo datos previos
+2025-03-10 03:01:46,851 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590106281,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "71206.22",
+        "0"
+      ],
+      [
+        "63674.77",
+        "0.000808"
+      ]
+    ],
+    "a": [
+      [
+        "80176.51",
+        "0"
+      ],
+      [
+        "81000",
+        "25.68585"
+      ]
+    ],
+    "u": 399498,
+    "seq": 1598008807
+  },
+  "cts": 1741590106263
+}
+2025-03-10 03:01:46,851 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:46,959 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590106387,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2068.699064"
+  }
+}
+2025-03-10 03:01:46,968 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:46,968 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590106388,
+  "type": "snapshot",
+  "cs": 1598008741,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.188045",
+    "turnover24h": "1596624182.125831",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82386.889523"
+  }
+}
+2025-03-10 03:01:46,976 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:47,351 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590106781,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "68744.17",
+        "0"
+      ],
+      [
+        "62824.53",
+        "0.002663"
+      ]
+    ],
+    "a": [
+      [
+        "79547.81",
+        "0"
+      ],
+      [
+        "81052.63",
+        "90"
+      ]
+    ],
+    "u": 399499,
+    "seq": 1598008809
+  },
+  "cts": 1741590106765
+}
+2025-03-10 03:01:47,351 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:47,615 [⚡ METAL ⚡] 📨 Mensaje: {
+  "success": true,
+  "ret_msg": "pong",
+  "conn_id": "bbfdb815-4657-401a-ada1-8bb89457e5c1",
+  "op": "ping"
+}
+2025-03-10 03:01:47,615 [⚡ METAL ⚡] 📡 Pong recibido
+2025-03-10 03:01:47,632 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590107062,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "70866.14",
+        "0.00144"
+      ],
+      [
+        "62824.53",
+        "0"
+      ]
+    ],
+    "a": [
+      [
+        "80006.82",
+        "0.00145"
+      ],
+      [
+        "81052.63",
+        "0"
+      ]
+    ],
+    "u": 399500,
+    "seq": 1598008811
+  },
+  "cts": 1741590107040
+}
+2025-03-10 03:01:47,632 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:47,957 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590107386,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2068.786077"
+  }
+}
+2025-03-10 03:01:47,966 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:47,966 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590107388,
+  "type": "snapshot",
+  "cs": 1598008741,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.188045",
+    "turnover24h": "1596624182.125831",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82389.656619"
+  }
+}
+2025-03-10 03:01:47,973 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:47,973 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590107401,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "70056.44",
+        "0.00168"
+      ],
+      [
+        "63674.77",
+        "0"
+      ]
+    ],
+    "a": [
+      [
+        "80917.82",
+        "0.00134"
+      ],
+      [
+        "81000",
+        "0"
+      ]
+    ],
+    "u": 399501,
+    "seq": 1598008821
+  },
+  "cts": 1741590107390
+}
+2025-03-10 03:01:47,973 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:48,331 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590107761,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "69532.72",
+        "0.00157"
+      ],
+      [
+        "63738.15",
+        "0"
+      ]
+    ],
+    "a": [],
+    "u": 399502,
+    "seq": 1598008823
+  },
+  "cts": 1741590107742
+}
+2025-03-10 03:01:48,331 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:01:48,331 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos
+2025-03-10 03:01:48,691 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590108122,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "67956.6",
+        "0.00128"
+      ],
+      [
+        "63925.6",
+        "0"
+      ]
+    ],
+    "a": [],
+    "u": 399503,
+    "seq": 1598008829
+  },
+  "cts": 1741590108102
+}
+2025-03-10 03:01:48,691 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:01:48,691 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos
+2025-03-10 03:01:48,959 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590108387,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2068.790869"
+  }
+}
+2025-03-10 03:01:48,968 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:48,968 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590108388,
+  "type": "snapshot",
+  "cs": 1598008741,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.188045",
+    "turnover24h": "1596624182.125831",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82390.13718"
+  }
+}
+2025-03-10 03:01:48,976 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:49,957 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590109386,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2068.914023"
+  }
+}
+2025-03-10 03:01:49,965 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:49,965 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590109388,
+  "type": "snapshot",
+  "cs": 1598008741,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.188045",
+    "turnover24h": "1596624182.125831",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82390.191436"
+  }
+}
+2025-03-10 03:01:49,972 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:50,511 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590109942,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "69363.93",
+        "0"
+      ],
+      [
+        "63925.6",
+        "0.000065"
+      ]
+    ],
+    "a": [
+      [
+        "79571.23",
+        "0"
+      ],
+      [
+        "81000",
+        "25.68585"
+      ]
+    ],
+    "u": 399504,
+    "seq": 1598008846
+  },
+  "cts": 1741590109930
+}
+2025-03-10 03:01:50,511 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:50,522 [⚡ METAL ⚡] 🤘 Orderbook actualizado para BTCUSDT: Bids=1, Asks=1
+2025-03-10 03:01:50,959 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590110387,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2068.860436"
+  }
+}
+2025-03-10 03:01:50,967 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:50,967 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590110389,
+  "type": "snapshot",
+  "cs": 1598008741,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.188045",
+    "turnover24h": "1596624182.125831",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82389.567483"
+  }
+}
+2025-03-10 03:01:50,974 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:51,011 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590110441,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "70042.24",
+        "0"
+      ],
+      [
+        "63738.15",
+        "0.000089"
+      ]
+    ],
+    "a": [
+      [
+        "80917.82",
+        "0"
+      ],
+      [
+        "81052.63",
+        "90"
+      ]
+    ],
+    "u": 399505,
+    "seq": 1598008859
+  },
+  "cts": 1741590110436
+}
+2025-03-10 03:01:51,011 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:51,511 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590110942,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "68472.65",
+        "0"
+      ],
+      [
+        "63674.77",
+        "0.000808"
+      ]
+    ],
+    "a": [
+      [
+        "80675.69",
+        "0"
+      ],
+      [
+        "81105.26",
+        "89.999931"
+      ]
+    ],
+    "u": 399506,
+    "seq": 1598008861
+  },
+  "cts": 1741590110939
+}
+2025-03-10 03:01:51,512 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:51,956 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590111386,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2069.32616"
+  }
+}
+2025-03-10 03:01:51,963 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:51,964 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590111388,
+  "type": "snapshot",
+  "cs": 1598008741,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.188045",
+    "turnover24h": "1596624182.125831",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82407.345256"
+  }
+}
+2025-03-10 03:01:51,970 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:52,031 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590111462,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "69532.72",
+        "0"
+      ],
+      [
+        "62824.53",
+        "0.002663"
+      ]
+    ],
+    "a": [],
+    "u": 399507,
+    "seq": 1598008870
+  },
+  "cts": 1741590111441
+}
+2025-03-10 03:01:52,031 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:01:52,031 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos
+2025-03-10 03:01:52,292 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590111721,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "70317.83",
+        "0.0017"
+      ],
+      [
+        "62824.53",
+        "0"
+      ]
+    ],
+    "a": [
+      [
+        "79938.68",
+        "0.00125"
+      ],
+      [
+        "81105.26",
+        "0"
+      ]
+    ],
+    "u": 399508,
+    "seq": 1598008873
+  },
+  "cts": 1741590111715
+}
+2025-03-10 03:01:52,292 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:52,652 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590112082,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "69372.65",
+        "0.00116"
+      ],
+      [
+        "63674.77",
+        "0"
+      ]
+    ],
+    "a": [
+      [
+        "80830.89",
+        "0.00115"
+      ],
+      [
+        "81052.63",
+        "0"
+      ]
+    ],
+    "u": 399509,
+    "seq": 1598008883
+  },
+  "cts": 1741590112068
+}
+2025-03-10 03:01:52,652 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:52,957 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.ETHUSDT",
+  "ts": 1741590112386,
+  "type": "snapshot",
+  "cs": 962360957,
+  "data": {
+    "symbol": "ETHUSDT",
+    "lastPrice": "2091.55",
+    "highPrice24h": "2257.18",
+    "lowPrice24h": "2023.17",
+    "prevPrice24h": "2188.83",
+    "volume24h": "5.89252",
+    "turnover24h": "12604.582397",
+    "price24hPcnt": "-0.0444",
+    "usdIndexPrice": "2069.678531"
+  }
+}
+2025-03-10 03:01:52,966 [⚡ METAL ⚡] ⚡ Ticker para ETHUSDT: 2091.55
+2025-03-10 03:01:52,966 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "tickers.BTCUSDT",
+  "ts": 1741590112388,
+  "type": "snapshot",
+  "cs": 1598008741,
+  "data": {
+    "symbol": "BTCUSDT",
+    "lastPrice": "75181.81",
+    "highPrice24h": "97045.43",
+    "lowPrice24h": "71625",
+    "prevPrice24h": "95142",
+    "volume24h": "19210.188045",
+    "turnover24h": "1596624182.125831",
+    "price24hPcnt": "-0.2098",
+    "usdIndexPrice": "82420.977625"
+  }
+}
+2025-03-10 03:01:52,974 [⚡ METAL ⚡] ⚡ Ticker para BTCUSDT: 75181.81
+2025-03-10 03:01:52,992 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590112422,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "69508.18",
+        "0.00133"
+      ],
+      [
+        "63738.15",
+        "0"
+      ]
+    ],
+    "a": [
+      [
+        "80619.69",
+        "0.00115"
+      ],
+      [
+        "81000",
+        "0"
+      ]
+    ],
+    "u": 399510,
+    "seq": 1598008889
+  },
+  "cts": 1741590112415
+}
+2025-03-10 03:01:52,992 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=2
+2025-03-10 03:01:53,352 [⚡ METAL ⚡] 📨 Mensaje: {
+  "topic": "orderbook.50.BTCUSDT",
+  "ts": 1741590112782,
+  "type": "delta",
+  "data": {
+    "s": "BTCUSDT",
+    "b": [
+      [
+        "68732.54",
+        "0.00136"
+      ],
+      [
+        "63925.6",
+        "0"
+      ]
+    ],
+    "a": [],
+    "u": 399511,
+    "seq": 1598008890
+  },
+  "cts": 1741590112766
+}
+2025-03-10 03:01:53,352 [⚡ METAL ⚡] 📊 Orderbook recibido para BTCUSDT: Bids=2, Asks=0
+2025-03-10 03:01:53,352 [⚡ METAL ⚡] ⚠️ Datos de orderbook inválidos después de filtrar para BTCUSDT: Bids=1, Asks=0, manteniendo datos previos

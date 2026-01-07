@@ -1,0 +1,145 @@
+import json
+import logging
+import sqlite3
+from datetime import datetime, timezone
+from pathlib import Path
+import numpy as np
+from adju_config import config
+
+# Configurar logging
+logging.basicConfig (level=logging.INFO, format='%(asctime)s [⚡ METAL ⚡] %(message)s')
+logger = logging.getLogger ("CreateDB")
+
+
+def initialize_database ():
+    """Inicializa la base de datos con tablas y datos ficticios."""
+    try:
+        # Validar configuración
+        cfg = config.get_config ()
+        if not cfg:
+            raise ValueError ("Configuración no inicializada correctamente")
+
+        base_path = Path (cfg ["base_path"])
+        db_path = base_path / "market_data.db"
+        base_path.mkdir (parents=True, exist_ok=True)
+
+        # Conectar a la base de datos
+        with sqlite3.connect (db_path) as conn:
+            cursor = conn.cursor ()
+            logger.info (f"⚡ Conectado a la base de datos en: {db_path}")
+            create_tables (cursor)
+            insert_dummy_data (cursor, cfg ["symbol"], cfg ["timeframe"])
+            conn.commit ()
+            logger.info (f"⚡ Base de datos poblada con datos ficticios en {db_path}")
+    except (sqlite3.Error, ValueError) as e:
+        logger.error (f"❌ [⚡ METAL ⚡] Error: {e}")
+        raise
+    except Exception as e:
+        logger.error (f"❌ [⚡ METAL ⚡] Error inesperado: {e}")
+        raise
+
+
+def create_tables (cursor):
+    """Crea las tablas en la base de datos."""
+    tables = [
+        ("""CREATE TABLE IF NOT EXISTS market_data (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            timestamp INTEGER NOT NULL,
+            symbol TEXT NOT NULL,
+            timeframe TEXT NOT NULL,
+            open REAL NOT NULL,
+            high REAL NOT NULL,
+            low REAL NOT NULL,
+            close REAL NOT NULL,
+            volume REAL NOT NULL,
+            UNIQUE(timestamp, symbol, timeframe)
+        )""", "market_data"),
+        ("""CREATE TABLE IF NOT EXISTS orderbook (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            timestamp INTEGER NOT NULL,
+            symbol TEXT NOT NULL,
+            bids TEXT NOT NULL,
+            asks TEXT NOT NULL,
+            UNIQUE(timestamp, symbol)
+        )""", "orderbook"),
+        ("""CREATE TABLE IF NOT EXISTS market_ticker (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            timestamp INTEGER NOT NULL,
+            symbol TEXT NOT NULL,
+            last_price REAL NOT NULL,
+            volume_24h REAL NOT NULL,
+            high_24h REAL NOT NULL,
+            low_24h REAL NOT NULL,
+            UNIQUE(timestamp, symbol)
+        )""", "market_ticker"),
+        ("""CREATE TABLE IF NOT EXISTS transactions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            timestamp INTEGER NOT NULL,
+            symbol TEXT NOT NULL,
+            action TEXT NOT NULL,
+            entry_price REAL NOT NULL,
+            exit_price REAL NOT NULL,
+            quantity REAL NOT NULL,
+            profit_loss REAL NOT NULL,
+            status TEXT NOT NULL
+        )""", "transactions")
+    ]
+    for sql, name in tables:
+        cursor.execute (sql)
+        logger.info (f"⚡ Tabla {name} creada exitosamente")
+
+
+def insert_dummy_data (cursor, symbol, timeframe):
+    """Inserta datos ficticios en las tablas."""
+    timestamp = int (datetime.now (timezone.utc).timestamp () * 1000)
+
+    # Market Data (50 velas)
+    for i in range (50):
+        price = 90000 + np.sin (i * 0.1) * 500
+        open_price = max (price, 0)  # Evitar precios negativos
+        high_price = open_price + np.random.uniform (50, 150)
+        low_price = max (open_price - np.random.uniform (50, 150), 0)
+        close_price = max (price + np.random.uniform (-50, 50), 0)
+        volume = max (1000 + np.random.uniform (0, 500), 0)
+        cursor.execute (
+            "INSERT INTO market_data (timestamp, symbol, timeframe, open, high, low, close, volume) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            (timestamp - i * 60000, symbol, timeframe, open_price, high_price, low_price, close_price, volume)
+        )
+    logger.info (f"⚡ {symbol} - {timeframe}: 50 velas ficticias insertadas")
+
+    # Orderbook (5 entradas)
+    for i in range (5):
+        bids = [[max (90000.0 - i * 10, 0), 10.0 + i] for i in range (3)]
+        asks = [[90100.0 + i * 10, 12.0 + i] for i in range (3)]
+        cursor.execute (
+            "INSERT INTO orderbook (timestamp, symbol, bids, asks) VALUES (?, ?, ?, ?)",
+            (timestamp - i * 60000, symbol, json.dumps (bids), json.dumps (asks))
+        )
+    logger.info (f"⚡ {symbol}: 5 entradas ficticias de orderbook insertadas")
+
+    # Market Ticker (5 entradas)
+    for i in range (5):
+        last_price = max (90000 + np.sin (i * 0.1) * 500, 0)
+        cursor.execute (
+            "INSERT INTO market_ticker (timestamp, symbol, last_price, volume_24h, high_24h, low_24h) VALUES (?, ?, ?, ?, ?, ?)",
+            (timestamp - i * 60000, symbol, last_price, 2500000.0 + i * 1000, last_price + 500,
+             max (last_price - 500, 0))
+        )
+    logger.info (f"⚡ {symbol}: 5 entradas ficticias de market_ticker insertadas")
+
+    # Transactions (3 transacciones)
+    for i in range (3):
+        action = "BUY" if i % 2 == 0 else "SELL"
+        entry_price = 90000 + i * 100
+        exit_price = entry_price * (1.05 if action == "BUY" else 0.95)
+        quantity = 0.001
+        profit_loss = quantity * (exit_price - entry_price) * (1 if action == "BUY" else -1)
+        cursor.execute (
+            "INSERT INTO transactions (timestamp, symbol, action, entry_price, exit_price, quantity, profit_loss, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            (timestamp - i * 60000, symbol, action, entry_price, exit_price, quantity, profit_loss, "CLOSED")
+        )
+    logger.info (f"⚡ {symbol}: 3 transacciones ficticias insertadas")
+
+
+if __name__ == "__main__":
+    initialize_database ()

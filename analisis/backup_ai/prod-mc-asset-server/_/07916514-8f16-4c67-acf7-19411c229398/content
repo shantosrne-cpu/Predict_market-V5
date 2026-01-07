@@ -1,0 +1,253 @@
+import os
+import json
+import asyncio
+import logging
+from datetime import datetime, timezone, timedelta
+from typing import List, Dict
+from dotenv import load_dotenv
+from sqlalchemy.orm import Session
+from fastapi import FastAPI
+from contextlib import asynccontextmanager
+import websockets  # Ensure 'websockets' module is installed with: pip install websockets
+from utils import calculate_metrics, save_results, timestamp_to_datetime
+from models import Base
+from models import Base
+from models.market_data import MarketData  # Update this to the correct module path if needed
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./test.db")
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False} if "sqlite" in DATABASE_URL else {})
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+# Configuración de logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] ⚡ METAL ⚡ %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S,%f"
+)
+logger = logging.getLogger("NertzMetalEngine")
+
+# URL del WebSocket de Bybit (ajusta según tu entorno)
+WS_URL = os.getenv("WS_URL", "wss://stream.bybit.com/v5/public/spot")
+
+class NertzMetalEngine:
+    def __init__(self):
+        load_dotenv()
+        self.symbols = os.getenv("SYMBOLS", "BTCUSDT,ETHUSDT").split(",")
+        self.running = False
+        self.candles = {symbol: [] for symbol in self.symbols}
+        self.orderbook_data = {symbol: {"bids": [], "asks": []} for symbol in self.symbols}
+        self.ticker_data = {symbol: {"last_price": 0.0, "volume_24h": 0.0, "high_24h": 0.0, "low_24h": 0.0} for symbol in self.symbols}
+        self.positions = {symbol: [] for symbol in self.symbols}
+        self.capital = float(os.getenv("CAPITAL_USDT", 1000.0))
+        self.trade_id_counter = 1
+        self.iterations = 0
+        self.last_trade_time = {symbol: datetime.min.replace(tzinfo=timezone.utc) for symbol in self.symbols}
+
+    async def _on_open(self):
+        """Envia la suscripción inicial al WebSocket."""
+        logger.info("✅ WebSocket conectado, suscribiéndose a datos...")
+        interval = os.getenv("INTERVAL", "5")
+        subscription = {
+            "op": "subscribe",
+            "args": [f"kline.{interval}.{symbol}" for symbol in self.symbols] +
+                    [f"orderbook.50.{symbol}" for symbol in self.symbols] +
+                    [f"tickers.{symbol}" for symbol in self.symbols]
+        }
+        return json.dumps(subscription)
+
+    async def _on_message(self, message: str):
+        """Procesa los mensajes recibidos del WebSocket."""
+        data = json.loads(message)
+        logger.debug(f"📨 Mensaje recibido: {data}")
+        for symbol in self.symbols:
+            if f"{symbol}" in data.get("topic", ""):
+                if "kline" in data.get("topic", ""):
+                    candle = data["data"][0]
+                    timestamp = timestamp_to_datetime(int(candle["t"]))
+                    if not any(c.timestamp == timestamp for c in self.candles[symbol]):
+                        self.candles[symbol].append(MarketData(
+                            timestamp=timestamp, symbol=symbol, open=float(candle["o"]),
+                            high=float(candle["h"]), low=float(candle["l"]), close=float(candle["c"]),
+                            volume=float(candle["v"])
+                        ))
+                        if len(self.candles[symbol]) > 20:
+                            self.candles[symbol] = self.candles[symbol][-20:]
+                        await self._execute_trade(symbol, SessionLocal())
+                elif "orderbook" in data.get("topic", ""):
+                    orderbook_data = data["data"]
+                    self.orderbook_data[symbol] = {
+                        "bids": orderbook_data.get("b", []),
+                        "asks": orderbook_data.get("a", [])
+                    }
+                    if not self.orderbook_data[symbol]["bids"]:
+                        logger.warning(f"⚠️ Bids vacíos para {symbol}, usando valores predeterminados")
+                elif "tickers" in data.get("topic", ""):
+                    ticker_data = data["data"]
+                    self.ticker_data[symbol] = {
+                        "last_price": float(ticker_data.get("lastPrice", 0.0)),
+                        "volume_24h": float(ticker_data.get("volume24h", 0.0)),
+                        "high_24h": float(ticker_data.get("highPrice24h", 0.0)),
+                        "low_24h": float(ticker_data.get("lowPrice24h", 0.0))
+                    }
+
+    async def _send_pings(self, websocket):
+        """Envia pings periódicos para mantener la conexión activa."""
+        while self.running:
+            try:
+                await websocket.send(json.dumps({"op": "ping"}))
+                await asyncio.sleep(15)
+            except Exception as e:
+                logger.error(f"❌ Error enviando ping: {e}")
+                break
+
+    async def _execute_trade(self, symbol: str, db: Session):
+        """Ejecuta una decisión de trading basada en métricas."""
+        if not self.candles[symbol] or len(self.candles[symbol]) < 5:
+            logger.warning(f"⚠️ Candles insuficientes para {symbol}, skipping trade")
+            return
+
+        current_time = datetime.now(timezone.utc)
+        cooldown = timedelta(seconds=float(os.getenv("COOLDOWN", 60)))
+        if current_time <= self.last_trade_time[symbol] + cooldown:
+            logger.debug(f"⏳ Cooldown activo para {symbol}, esperando hasta {self.last_trade_time[symbol] + cooldown}")
+            return
+
+        candle_data = [{"open": c.open, "high": c.high, "low": c.low, "close": c.close, "volume": c.volume} for c in self.candles[symbol]]
+        metrics = calculate_metrics(candle_data, self.orderbook_data[symbol], self.ticker_data[symbol])
+        logger.info(f"📊 Métricas para {symbol}: {metrics}")
+
+        decision = self._determine_decision(symbol)
+        if decision == "hold":
+            logger.debug(f"🤖 Decisión de hold para {symbol}")
+            return
+
+        risk_per_trade = self.capital * 0.01
+        volatility = sum(max(c.high - c.low, 0.01) for c in self.candles[symbol]) / len(self.candles[symbol]) / self.ticker_data[symbol]["last_price"]
+        quantity = max(min(risk_per_trade / (volatility * self.ticker_data[symbol]["last_price"]), 0.1), 0.01)
+        entry_price = self.ticker_data[symbol]["last_price"]
+
+        order_result = {"success": True, "order_id": self.trade_id_counter}
+        if order_result["success"]:
+            self.trade_id_counter += 1
+            exit_price = entry_price * 1.025 if decision == "buy" else entry_price * 0.975
+            profit_loss = (exit_price - entry_price) * quantity if decision == "sell" else (entry_price - exit_price) * quantity
+            self.capital += profit_loss
+            trade = {
+                "trade_id": self.trade_id_counter - 1,
+                "timestamp": current_time,
+                "symbol": symbol,
+                "action": decision,
+                "entry_price": entry_price,
+                "exit_price": exit_price,
+                "quantity": quantity,
+                "profit_loss": profit_loss,
+                "risk_reward_ratio": 2.0,
+                "combined": metrics["combined"],
+                "ild": metrics["ild"],
+                "egm": metrics["egm"],
+                "rol": metrics["rol"],
+                "pio": metrics["pio"],
+                "ogm": metrics["ogm"]
+            }
+            self.positions[symbol].append(trade)
+            self.last_trade_time[symbol] = current_time
+            logger.info(f"💰 Trade simulado: {decision.upper()} {quantity:.4f} {symbol} @ {entry_price:.2f}, Exit @ {exit_price:.2f}, P&L: {profit_loss:.2f}")
+
+        self.iterations += 1
+        if self.iterations >= int(os.getenv("MAX_ITERATIONS", 1440)):
+            self.stop()
+
+    def _determine_decision(self, symbol: str) -> str:
+        """Determina la decisión de trading basada en métricas."""
+        candle_data = [{"open": c.open, "high": c.high, "low": c.low, "close": c.close, "volume": c.volume} for c in self.candles[symbol]]
+        metrics = calculate_metrics(candle_data, self.orderbook_data[symbol], self.ticker_data[symbol])
+        if metrics["combined"] > 0.1 and self.capital > float(os.getenv("MIN_CAPITAL", 100.0)):
+            return "buy"
+        elif metrics["combined"] < -0.1 and len(self.positions[symbol]) > 0:
+            return "sell"
+        return "hold"
+
+    async def _start_websocket(self):
+        """Inicia y mantiene la conexión WebSocket."""
+        while self.running:
+            try:
+                async with websockets.connect(WS_URL) as websocket:
+                    subscription_message = await self._on_open()
+                    await websocket.send(subscription_message)
+                    asyncio.create_task(self._send_pings(websocket))
+                    async for message in websocket:
+                        await self._on_message(message)
+            except Exception as e:
+                logger.error(f"❌ Error en WebSocket: {e}")
+                await asyncio.sleep(15)
+
+    def _fetch_symbol_data(self, symbol: str, db: Session):
+        """Carga datos iniciales desde la base de datos (simulado)."""
+        pass  # Implementa esta función si necesitas datos históricos
+
+    def start(self):
+        """Inicia el motor de trading."""
+        self.running = True
+        for symbol in self.symbols:
+            with SessionLocal() as db:
+                self._fetch_symbol_data(symbol, db)
+        asyncio.create_task(self._start_websocket())
+        logger.info("🚀 NertzMetalEngine iniciado")
+
+    def stop(self):
+        """Detiene el motor y guarda los resultados."""
+        self.running = False
+        total_pnl = sum(sum(p["profit_loss"] for p in positions) for positions in self.positions.values())
+        results = {
+            "capital_inicial": float(os.getenv("CAPITAL_USDT", 1000.0)),
+            "capital_final": self.capital,
+            "total_pnl": total_pnl,
+            "trades": {symbol: positions for symbol, positions in self.positions.items()},
+            "iterations": self.iterations
+        }
+        log_dir = os.path.join(os.path.dirname(__file__), "..", "logs")
+        save_results(results, log_dir=log_dir)
+        logger.info(f"🛑 NertzMetalEngine detenido. Capital final: {self.capital:.2f} USDT, Iteraciones: {self.iterations}")
+
+# Configuración de FastAPI
+app = FastAPI()
+nertz_engine = NertzMetalEngine()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    nertz_engine.start()
+    yield
+    nertz_engine.stop()
+
+@app.get("/status")
+async def get_status():
+    return {"status": "running" if nertz_engine.running else "stopped", "capital": nertz_engine.capital}
+
+@app.get("/market_data/{symbol}")
+async def get_market_data(symbol: str):
+    return nertz_engine.candles.get(symbol, [])
+
+@app.get("/orderbook/{symbol}")
+async def get_orderbook(symbol: str):
+    return nertz_engine.orderbook_data.get(symbol, {"bids": [], "asks": []})
+
+@app.get("/ticker/{symbol}")
+async def get_ticker(symbol: str):
+    return nertz_engine.ticker_data.get(symbol, {})
+
+@app.get("/metrics/{symbol}")
+async def get_metrics_data(symbol: str):
+    candle_data = [{"open": c.open, "high": c.high, "low": c.low, "close": c.close, "volume": c.volume} for c in nertz_engine.candles.get(symbol, [])]
+    return calculate_metrics(candle_data, nertz_engine.orderbook_data.get(symbol, {}), nertz_engine.ticker_data.get(symbol, {}))
+
+@app.get("/profit")
+async def get_profit():
+    total_pnl = sum(sum(p["profit_loss"] for p in positions) for positions in nertz_engine.positions.values())
+    return {"total_pnl": total_pnl, "capital": nertz_engine.capital}
+
+if __name__ == "__main__":
+    import uvicorn
+    Base.metadata.create_all(bind=engine)
+    uvicorn.run(app, host="0.0.0.0", port=8000)

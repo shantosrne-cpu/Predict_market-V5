@@ -1,0 +1,983 @@
+import asyncio
+import json
+import logging
+import os
+import time
+from datetime import datetime, timezone, timedelta
+from typing import List, Dict
+
+import aiohttp
+import uvicorn
+from fastapi import FastAPI
+from fastapi.params import Depends
+from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime, JSON
+from sqlalchemy.engine import default
+from sqlalchemy.orm import sessionmaker, Session, declarative_base
+
+from config.settings import config_settings
+from utils import calculate_metrics, save_results, timestamp_to_datetime, calculate_tp_sl, generate_signature
+
+# Configuración de logging para que coincida con config/settings.py
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
+logger = logging.getLogger("NertzMetalEngine")
+
+# URL y base de datos
+BASE_URL = "https://api-testnet.bybit.com" if config_settings.USE_TESTNET else "https://api.bybit.com"
+WS_URL = "wss://stream-testnet.bybit.com/v5/public/spot" if config_settings.USE_TESTNET else "wss://stream.bybit.com/v5/public/spot"
+DATABASE_DIR = os.path.join(os.path.dirname(__file__), '..', 'data')
+os.makedirs(DATABASE_DIR, exist_ok=True)
+DATABASE_URL = os.path.join(DATABASE_DIR, 'trading.db')
+
+engine = create_engine(f"sqlite:///{DATABASE_URL}", connect_args={"check_same_thread": False})
+Base = declarative_base()
+
+# Modelos de la base de datos
+class MarketData(Base):
+    __tablename__ = "market_data"
+    id = Column(Integer, primary_key=True, index=True)
+    timestamp = Column(DateTime, index=True)
+    symbol = Column(String(10), nullable=False)
+    open = Column(Float, nullable=False, default=0.0)
+    high = Column(Float, nullable=False, default=0.0)
+    low = Column(Float, nullable=False, default=0.0)
+    close = Column (Float, nullable=False, default=0.0)
+    volume = Column(Float, nullable=False, default=0.0)
+
+class Orderbook(Base):
+    __tablename__ = "orderbook"
+    id = Column(Integer, primary_key=True, index=True)
+    timestamp = Column(DateTime, nullable=False, index=True)
+    symbol = Column(String(10), nullable=False, index=True)
+    bids = Column(JSON, nullable=False)
+    asks = Column(JSON, nullable=False)
+
+class MarketTicker(Base):
+    __tablename__ = "market_ticker"
+    id = Column(Integer, primary_key=True, index=True)
+    timestamp = Column(DateTime, nullable=False, index=True)
+    symbol = Column(String(10), nullable=False, index=True)
+    last_price = Column(Float, nullable=False, default=0.0)
+    volume_24h = Column(Float, nullable=False, default=0.0)
+    high_24h = Column(Float, nullable=False, default=0.0)
+    low_24h = Column(Float, nullable=False, default=0.0)
+
+class Trade(Base):
+    __tablename__ = "trades"
+    id = Column(Integer, primary_key=True, index=True)
+    trade_id = Column(Integer, nullable=False, unique=True)
+    timestamp = Column(DateTime, nullable=False, index=True)
+    symbol = Column(String(10), nullable=False, index=True)
+    action = Column(String, nullable=False)
+    entry_price = Column(Float, nullable=False, default=0.0)
+    exit_price = Column(Float, nullable=False, default=0.0)
+    quantity = Column(Float, nullable=False, default=0.0)
+    profit_loss = Column(Float, nullable=False, default=0.0)
+    decision = Column(String, nullable=False)
+    combined = Column(Float, nullable=False, default=0.0)
+    ild = Column(Float, nullable=False, default=0.0)
+    egm = Column(Float, nullable=False, default=0.0)
+    rol = Column(Float, nullable=False, default=0.0)
+    pio = Column(Float, nullable=False, default=0.0)
+    ogm = Column(Float, nullable=False, default=0.0)
+    risk_reward_ratio = Column(Float, nullable=False, default=1.5)
+
+Base.metadata.create_all(bind=engine)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+# Dependencia para la base de datos
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+# Función para obtener datos de la API
+async def fetch_data(session, url, params=None):
+    async with session.get(url, params=params) as response:
+        if response.status == 200:
+            return await response.json()
+        logger.error(f"❌ Error en {url}: {response.status}")
+        return None
+
+# Función para actualizar orderbook
+def _update_orderbook(bid_dict, ask_dict, data):
+    for price, qty in data["data"]["b"]:
+        price = float(price)
+        qty = float(qty)
+        if qty > 0:
+            bid_dict[price] = qty
+        elif price in bid_dict:
+            del bid_dict[price]
+    for price, qty in data["data"]["a"]:
+        price = float(price)
+        qty = float(qty)
+        if qty > 0:
+            ask_dict[price] = qty
+        elif price in ask_dict:
+            del ask_dict[price]
+
+class NertzMetalEngine:
+    def __init__(self) -> None:
+        self.timeframe = config_settings.TIMEFRAME
+        self.symbols = config_settings.SYMBOL.split(",")
+        self.capital = config_settings.CAPITAL_USDT
+        self.positions = {symbol: [] for symbol in self.symbols}
+        self.iterations = 0
+        self.ws = None
+        self.running = True
+        self.orderbook_data = {symbol: {"bids": [], "asks": []} for symbol in self.symbols}
+        self.ticker_data = {symbol: {"last_price": 0.0, "volume_24h": 0.0, "high_24h": 0.0, "low_24h": 0.0} for symbol in self.symbols}
+        self.candles = {symbol: [] for symbol in self.symbols}
+        self.trade_id_counter = self._load_initial_trade_id()
+        self._load_positions()
+        self.last_orderbook_log = 0
+        self.last_trade_time = {symbol: datetime.min.replace(tzinfo=timezone.utc) for symbol in self.symbols}
+
+    def _load_initial_trade_id(self):
+        with SessionLocal() as db:
+            last_trade = db.query(Trade.trade_id).order_by(Trade.trade_id.desc()).first()
+            return last_trade[0] + 1 if last_trade else 1
+
+    def _load_positions(self):
+        with SessionLocal() as db:
+            for symbol in self.symbols:
+                trades = db.query(Trade).filter_by(symbol=symbol).order_by(Trade.timestamp.desc()).all()
+                self.positions[symbol] = [{
+                    "trade_id": t.trade_id,
+                    "timestamp": t.timestamp.isoformat(),
+                    "symbol": t.symbol,
+                    "action": t.action,
+                    "entry_price": t.entry_price,
+                    "exit_price": t.exit_price,
+                    "quantity": t.quantity,
+                    "profit_loss": t.profit_loss,
+                    "decision": t.decision,
+                    "combined": t.combined,
+                    "ild": t.ild,
+                    "egm": t.egm,
+                    "rol": t.rol,
+                    "pio": t.pio,
+                    "ogm": t.ogm,
+                    "risk_reward_ratio": t.risk_reward_ratio
+                } for t in trades]
+
+    async def fetch_initial_data(self):
+        async with aiohttp.ClientSession() as session:
+            tasks = [self._fetch_symbol_data(session, symbol) for symbol in self.symbols]
+            results = await asyncio.gather(*tasks, return_exceptions=True)
+            for result in results:
+                if isinstance(result, Exception):
+                    logger.error(f"❌ Error al obtener datos iniciales: {result}")
+
+    async def _fetch_symbol_data(self, session, symbol):
+        try:
+            kline_url = f"{BASE_URL}/v5/market/kline"
+            params = {"category": "spot", "symbol": symbol, "interval": self.timeframe.replace("m", ""), "limit": 50}
+            kline_response = await fetch_data(session, kline_url, params)
+            if kline_response and "result" in kline_response and "list" in kline_response["result"]:
+                self.candles[symbol] = [
+                    MarketData(
+                        timestamp=timestamp_to_datetime(int(k[0])),
+                        symbol=symbol,
+                        open=float(k[1]),
+                        high=float(k[2]),
+                        low=float(k[3]),
+                        close=float(k[4]),
+                        volume=float(k[5])
+                    ) for k in kline_response["result"]["list"]
+                ]
+                with SessionLocal() as db:
+                    for candle in self.candles[symbol]:
+                        if not db.query(MarketData).filter_by(timestamp=candle.timestamp, symbol=symbol).first():
+                            db.add(candle)
+                    db.commit()
+                logger.info(f"📈 Velas iniciales para {symbol}: {len(self.candles[symbol])}")
+            else:
+                logger.error(f"❌ Kline inesperado para {symbol}: {kline_response}")
+
+            orderbook_url = f"{BASE_URL}/v5/market/orderbook"
+            params = {"category": "spot", "symbol": symbol, "limit": 100}
+            orderbook_response = await fetch_data(session, orderbook_url, params)
+            if orderbook_response and "result" in orderbook_response:
+                self.orderbook_data[symbol] = {"bids": orderbook_response["result"]["b"], "asks": orderbook_response["result"]["a"]}
+                logger.info(f"📊 Orderbook inicial para {symbol}: Bids={len(self.orderbook_data[symbol]['bids'])}, Asks={len(self.orderbook_data[symbol]['asks'])}")
+            else:
+                logger.error(f"❌ Orderbook inesperado para {symbol}: {orderbook_response}")
+
+            ticker_url = f"{BASE_URL}/v5/market/tickers"
+            params = {"category": "spot", "symbol": symbol}
+            ticker_response = await fetch_data(session, ticker_url, params)
+            if ticker_response and "result" in ticker_response and "list" in ticker_response["result"]:
+                ticker_data = ticker_response["result"]["list"][0]
+                self.ticker_data[symbol] = {
+                    "last_price": float(ticker_data["lastPrice"]),
+                    "volume_24h": float(ticker_data["volume24h"]),
+                    "high_24h": float(ticker_data["highPrice24h"]),
+                    "low_24h": float(ticker_data["lowPrice24h"])
+                }
+                logger.info(f"⚡ Ticker inicial para {symbol}: {self.ticker_data[symbol]['last_price']}")
+            else:
+                logger.error(f"❌ Ticker inesperado para {symbol}: {ticker_response}")
+        except Exception as e:
+            logger.error(f"❌ Fetch inicial falló para {symbol}: {e}")
+
+    async def start_async(self):
+        logger.info(f"🔥 Iniciando bot para {self.symbols}")
+        max_attempts = 5
+        for attempt in range(max_attempts):
+            if not self.running:
+                logger.info("🛑 Bot detenido antes de iniciar.")
+                break
+            try:
+                logger.info(f"Intento {attempt + 1}/{max_attempts} para obtener datos iniciales...")
+                await self.fetch_initial_data()
+                logger.info("✅ Datos iniciales obtenidos, conectando al WebSocket...")
+                await self._connect_websocket_async()
+                break
+            except Exception as e:
+                logger.error(f"❌ Error al iniciar (intento {attempt + 1}/{max_attempts}): {e}")
+                if attempt < max_attempts - 1:
+                    await asyncio.sleep(5)
+                else:
+                    logger.critical("❌ Máximo de intentos alcanzado. Deteniendo.")
+                    self.stop()
+
+    async def _connect_websocket_async(self):
+        import websockets
+        while self.running:
+            try:
+                async with websockets.connect(WS_URL) as ws:
+                    self.ws = ws
+                    logger.info("🌐 WebSocket abierto")
+                    await self._resubscribe_async()
+                    async for message in ws:
+                        await self._on_message(ws, message)
+            except websockets.ConnectionClosed as e:
+                logger.warning(f"⚠️ WebSocket cerrado: {e}, intentando reconectar en 5s...")
+                await asyncio.sleep(5)
+            except Exception as e:
+                logger.error(f"❌ Error en WebSocket: {e}")
+                await asyncio.sleep(5)
+
+    async def _resubscribe_async(self):
+        interval = self.timeframe.replace("m", "")
+        for symbol in self.symbols:
+            subscription = {"op": "subscribe", "args": [f"kline.{interval}.{symbol}", f"orderbook.50.{symbol}", f"tickers.{symbol}"]}
+            if self.ws:
+                await self.ws.send(json.dumps(subscription))
+                logger.info(f"📡 Suscrito a {symbol}")
+
+    async def _on_message(self, ws, message):
+        with SessionLocal() as db:
+            try:
+                if isinstance(message, bytes):
+                    message = message.decode('utf-8')
+                elif isinstance(message, tuple):
+                    message = message[0]
+                elif message is None:
+                    logger.warning("⚠️ Mensaje recibido es None, ignorando.")
+                    return
+
+                if isinstance(message, str):
+                    data = json.loads(message)
+                    logger.debug(f"📨 Mensaje procesado: {json.dumps(data, indent=2)}")
+
+                    if "topic" not in data:
+                        logger.debug("⚠️ Mensaje sin tema ('topic'), posiblemente ping/pong.")
+                        if data.get("op") == "ping" and ws is not None:
+                            await ws.send(json.dumps({"op": "pong", "ts": data.get("ts", int(time.time() * 1000))}))
+                        return
+
+                    symbol = data["topic"].split(".")[-1]
+                    if symbol not in self.symbols:
+                        logger.warning(f"⚠️ Símbolo desconocido: {symbol}")
+                        return
+
+                    if "kline" in data["topic"] and data.get("data") and len(data["data"]) > 0:
+                        await self._handle_kline(symbol, data["data"][0], db)
+                    elif "orderbook" in data["topic"] and data.get("data"):
+                        await self._handle_orderbook(symbol, data, db)
+                    elif "tickers" in data["topic"] and data.get("data"):
+                        await self._handle_ticker(symbol, data["data"], db)
+                    else:
+                        logger.warning(f"⚠️ Tema no manejado o datos inválidos: {data.get('topic', 'desconocido')}")
+                else:
+                    logger.error(f"❌ Mensaje no procesable. Tipo recibido: {type(message)}")
+            except json.JSONDecodeError as e:
+                logger.error(f"❌ Error de decodificación JSON: {e}")
+            except Exception as e:
+                logger.error(f"❌ Error inesperado en mensaje: {e}")
+
+    async def _handle_kline (self, symbol: str, kline: Dict, db: Session):
+        try:
+            # Validar y convertir el timestamp
+            timestamp_value = kline.get ("start")
+            if not timestamp_value or not str (timestamp_value).isdigit ():
+                logger.warning (f"⚠️ Timestamp inválido '{timestamp_value}' para {symbol}. Saltando.")
+                return
+            timestamp = timestamp_to_datetime (int (timestamp_value))
+
+            # Extraer y validar los valores de kline
+            try:
+                volume = float (kline.get ("volume", 0))
+                open_price = float (kline.get ("open", 0))
+                high_price = float (kline.get ("high", 0))
+                low_price = float (kline.get ("low", 0))
+                close_price = float (kline.get ("close", 0))
+            except (ValueError, TypeError) as e:
+                logger.warning (f"⚠️ Valores inválidos en Kline ('{kline}') para {symbol}: {e}")
+                return
+
+            logger.debug (
+                f"📥 Kline recibido para {symbol}: timestamp={timestamp}, close={close_price}, volume={volume}")
+
+            # Verificar si la vela ya existe en la base de datos
+            if not db.query (MarketData).filter_by (timestamp=timestamp, symbol=symbol).first ():
+                # Crear y agregar la nueva vela a la base de datos
+                candle = MarketData (
+                    timestamp=timestamp, symbol=symbol, open=open_price, high=high_price,
+                    low=low_price, close=close_price, volume=volume
+                )
+                db.add (candle)
+                db.commit ()
+                logger.info (f"⚡ Kline para {symbol}: Close={candle.close}, Volume={candle.volume}")
+
+                # Actualizar las velas en memoria para el símbolo
+                self.candles [symbol] = db.query (MarketData).filter_by (symbol=symbol).order_by (
+                    MarketData.timestamp.desc ()).limit (50).all ()
+                logger.info (f"📈 Acumulados {len (self.candles [symbol])} velas para {symbol}")
+
+                # Ejecutar trade con cada vela real
+                await self._execute_trade (symbol, db)
+
+        except Exception as e:
+            logger.error (f"❌ Error inesperado en _handle_kline para {symbol}: {e}")
+
+    async def _handle_orderbook (self, symbol: str, data: Dict, db: Session):
+        try:
+            if data.get ("type") == "snapshot":
+                self.orderbook_data [symbol] = {"bids": data ["data"] ["b"], "asks": data ["data"] ["a"]}
+                await self._store_orderbook (symbol, db)
+                logger.info (
+                    f"📊 Snapshot para {symbol}: Bids={len (self.orderbook_data [symbol] ['bids'])}, Asks={len (self.orderbook_data [symbol] ['asks'])}")
+            elif data.get ("type") == "delta":
+                if symbol not in self.orderbook_data or not self.orderbook_data [symbol] ["bids"]:
+                    logger.warning (f"⚠️ No hay orderbook previo para {symbol}, esperando snapshot")
+                    return
+                current = self.orderbook_data [symbol]
+                bid_dict = {float (b [0]): float (b [1]) for b in current ["bids"]}
+                ask_dict = {float (a [0]): float (a [1]) for a in current ["asks"]}
+                _update_orderbook (bid_dict, ask_dict, data)
+                self.orderbook_data [symbol] = {
+                    "bids": [[str (p), str (q)] for p, q in sorted (bid_dict.items (), reverse=True) if q > 0] [:50],
+                    "asks": [[str (p), str (q)] for p, q in sorted (ask_dict.items ()) if q > 0] [:50]
+                }
+                await self._store_orderbook (symbol, db)
+                logger.info (
+                    f"📊 Delta para {symbol}: Bids={len (self.orderbook_data [symbol] ['bids'])}, Asks={len (self.orderbook_data [symbol] ['asks'])}")
+        except Exception as e:
+            logger.error (f"❌ Error en _handle_orderbook para {symbol}: {e}")
+
+    async def _store_orderbook (self, symbol: str, db: Session):
+        try:
+            orderbook = Orderbook (
+                timestamp=datetime.now (timezone.utc), symbol=symbol,
+                bids=json.dumps (self.orderbook_data [symbol] ["bids"]),
+                asks=json.dumps (self.orderbook_data [symbol] ["asks"])
+            )
+            db.add (orderbook)
+            db.commit ()
+            if time.time () - self.last_orderbook_log >= 5:
+                logger.info (
+                    f"🤘 Orderbook guardado para {symbol}: Bids={len (self.orderbook_data [symbol] ['bids'])}, Asks={len (self.orderbook_data [symbol] ['asks'])}")
+                self.last_orderbook_log = time.time ()
+        except Exception as e:
+            logger.error (f"❌ Error al guardar orderbook para {symbol}: {e}")
+
+    async def _handle_ticker (self, symbol: str, ticker: Dict, db: Session):
+        try:
+            if not isinstance (ticker, dict) or not ticker:
+                logger.warning (f"⚠️ Ticker inválido para {symbol}: {ticker}. Saltando.")
+                return
+
+            required = ["lastPrice", "volume24h", "highPrice24h", "lowPrice24h"]
+            if not all (key in ticker for key in required):
+                logger.warning (f"⚠️ Faltan claves en ticker para {symbol}: {ticker}. Saltando.")
+                return
+
+            self.ticker_data [symbol] = {
+                "last_price": float (ticker ["lastPrice"]),
+                "volume_24h": float (ticker ["volume24h"]),
+                "high_24h": float (ticker ["highPrice24h"]),
+                "low_24h": float (ticker ["lowPrice24h"])
+            }
+
+            market_ticker = MarketTicker (
+                timestamp=datetime.now (timezone.utc),
+                symbol=symbol,
+                last_price=self.ticker_data [symbol] ["last_price"],
+                volume_24h=self.ticker_data [symbol] ["volume_24h"],
+                high_24h=self.ticker_data [symbol] ["high_24h"],
+                low_24h=self.ticker_data [symbol] ["low_24h"]
+            )
+            db.add (market_ticker)
+            db.commit ()
+
+            logger.info (f"⚡ Ticker actualizado para {symbol}: {self.ticker_data [symbol] ['last_price']}")
+
+        except ValueError as ve:
+            logger.error (f"❌ Error de formato en ticker para {symbol}: {ve}")
+        except Exception as e:
+            logger.error (f"❌ Error inesperado en _handle_ticker para {symbol}: {type (e).__name__} - {str (e)}")
+
+    @staticmethod
+    def _determine_decision (symbol: str, metrics: Dict) -> str:
+        egm = metrics.get ("egm", 0)
+        logger.info (
+            f"🔍 Debug - {symbol}: EGM={egm:.4f}, Buy Threshold={config_settings.EGM_BUY_THRESHOLD}, Sell Threshold={config_settings.EGM_SELL_THRESHOLD}")
+        if (egm > config_settings.EGM_BUY_THRESHOLD):
+            return "buy"
+        elif (egm < config_settings.EGM_SELL_THRESHOLD):
+            return "sell"
+        return "hold"
+
+    async def _execute_trade (self, symbol: str, db: Session):
+        try:
+            candles = self.candles.get (symbol, [])
+            if len (candles) < 5:
+                logger.warning (f"⚠️ No hay suficientes velas ({len (candles)}/5) para {symbol}")
+                return
+
+            current_time = datetime.now (timezone.utc)
+            cooldown = timedelta (seconds=config_settings.DEFAULT_SLEEP_TIME)
+            last_trade_time = self.last_trade_time.get (symbol, datetime.min.replace (tzinfo=timezone.utc))
+            if current_time <= last_trade_time + cooldown:
+                logger.debug (f"⏳ Cooldown activo para {symbol}, esperando hasta {last_trade_time + cooldown}")
+                return
+
+            candle_data = [
+                {"open": c.open, "high": c.high, "low": c.low, "close": c.close, "volume": c.volume}
+                for c in candles
+            ]
+            orderbook = self.orderbook_data.get (symbol, {"bids": [], "asks": []})
+            ticker = self.ticker_data.get (symbol, {"last_price": 0.0})
+
+            metrics = calculate_metrics (candle_data, orderbook, ticker)
+            logger.info (
+                f"📊 Métricas calculadas para {symbol}: pio={metrics.get ('pio', 0)}, ild={metrics.get ('ild', 0)}, egm={metrics.get ('egm', 0)}, rol={metrics.get ('rol', 0)}, combined={metrics.get ('combined', 0)}")
+
+            decision = self._determine_decision (symbol, metrics)
+            if decision == "hold":
+                logger.debug (f"🤖 Decisión de hold para {symbol}")
+                return
+
+            risk_per_trade = self.capital * config_settings.RISK_FACTOR
+            volatility = metrics.get ("volatility", 0.01)
+            if volatility <= 0:
+                logger.warning (f"⚠️ Volatilidad inválida ({volatility}) para {symbol}, usando 0.01")
+                volatility = 0.01
+
+            last_price = ticker.get ("last_price", 0.0)
+            if last_price <= 0:
+                logger.error (f"❌ Precio inválido ({last_price}) para {symbol}")
+                return
+
+            quantity = risk_per_trade / (volatility * last_price)
+            quantity = max (min (quantity, config_settings.MAX_TRADE_SIZE), config_settings.MIN_TRADE_SIZE)
+
+            trade_value = quantity * last_price
+            if trade_value > self.capital:
+                logger.warning (f"⚠️ Cantidad excesiva ({trade_value:.2f}) para {symbol}. Ajustando...")
+                quantity = (self.capital * 0.1) / last_price
+                if quantity < config_settings.MIN_TRADE_SIZE:
+                    logger.warning (f"⚠️ Cantidad ajustada ({quantity}) por debajo del mínimo. Saltando trade.")
+                    return
+
+            entry_price = last_price
+            tp, sl = calculate_tp_sl (entry_price, volatility, decision, config_settings.TP_PERCENTAGE,
+                                      config_settings.SL_PERCENTAGE)
+
+            # Enviar orden real a Bybit
+            order_result = await self._place_order (symbol, decision, quantity, entry_price, tp, sl)
+            if not order_result.get ("success", False):
+                logger.error (
+                    f"❌ Fallo al colocar orden para {symbol}: {order_result.get ('message', 'Error desconocido')}")
+                return
+
+            self.trade_id_counter += 1
+            profit_loss = (tp - entry_price) * quantity if decision == "buy" else (entry_price - sl) * quantity
+            profit_loss *= (1 - config_settings.FEE_RATE)
+
+            new_capital = self.capital + profit_loss
+            if new_capital > 1e15 or new_capital < 0:
+                logger.error (
+                    f"❌ Capital anormal ({new_capital:.2f}) para {symbol}. Reseteando a {config_settings.CAPITAL_USDT}")
+                self.capital = config_settings.CAPITAL_USDT
+            else:
+                self.capital = new_capital
+
+            trade = Trade (
+                trade_id=self.trade_id_counter - 1,
+                timestamp=current_time,
+                symbol=symbol,
+                action=decision,
+                entry_price=entry_price,
+                exit_price=tp if decision == "buy" else sl,
+                quantity=quantity,
+                profit_loss=profit_loss,
+                decision=decision,
+                combined=metrics.get ("combined", 0),
+                ild=metrics.get ("ild", 0),
+                egm=metrics.get ("egm", 0),
+                rol=metrics.get ("rol", 0),
+                pio=metrics.get ("pio", 0),
+                ogm=metrics.get ("ogm", 0),
+                risk_reward_ratio=config_settings.TP_PERCENTAGE / config_settings.SL_PERCENTAGE
+            )
+            db.add (trade)
+            db.commit ()
+
+            self.positions.setdefault (symbol, []).append ({
+                "trade_id": trade.trade_id,
+                "timestamp": trade.timestamp.isoformat (),
+                "symbol": trade.symbol,
+                "action": trade.action,
+                "entry_price": trade.entry_price,
+                "exit_price": trade.exit_price,
+                "quantity": trade.quantity,
+                "profit_loss": trade.profit_loss,
+                "decision": trade.decision,
+                "combined": trade.combined,
+                "ild": trade.ild,
+                "egm": trade.egm,
+                "rol": trade.rol,
+                "pio": trade.pio,
+                "ogm": trade.ogm,
+                "risk_reward_ratio": trade.risk_reward_ratio
+            })
+            self.last_trade_time [symbol] = current_time
+
+            logger.info (
+                f"💰 Orden colocada: {decision.upper ()} {quantity:.4f} {symbol} @ {entry_price:.2f}, TP={tp:.2f}, SL={sl:.2f}, P&L: {profit_loss:.2f}, Capital: {self.capital:.2f}")
+
+            self.iterations += 1
+            if self.iterations >= config_settings.MAX_ITERATIONS > 0:
+                logger.info ("🏁 Máximo de iteraciones alcanzado. Deteniendo bot.")
+                self.stop ()
+            await self._save_results (symbol, trade)
+
+        except Exception as e:
+            logger.error (f"❌ Error en _execute_trade para {symbol}: {e}")
+            raise
+
+    async def _place_order (self, symbol: str, action: str, quantity: float, price: float, tp: float,
+                            sl: float) -> Dict:
+        """Coloca una orden real en Bybit."""
+        try:
+            if not config_settings.BYBIT_API_KEY or not config_settings.BYBIT_API_SECRET:
+                logger.error ("❌ Credenciales de API no configuradas. Simulando orden.")
+                return {"success": True, "order_id": self.trade_id_counter}
+
+            side = "Buy" if action.lower () == "buy" else "Sell"
+            order_type = config_settings.ORDER_TYPE  # "limit" o "market"
+            time_in_force = config_settings.TIME_IN_FORCE  # Ejemplo: "GoodTillCancel"
+
+            # Crear los parámetros para la solicitud
+            params = {
+                "category": "spot",
+                "symbol": symbol,
+                "side": side,
+                "orderType": order_type,
+                "qty": str (quantity),
+                "price": str (price) if order_type == "limit" else None,
+                "timeInForce": time_in_force,
+                "takeProfit": str (tp),
+                "stopLoss": str (sl),
+                "timestamp": str (int (time.time () * 1000)),
+                "recvWindow": "5000"
+            }
+            # Filtrar parámetros None
+            params = {k: v for k, v in params.items () if v is not None}
+
+            # Generar firma (sin incluir el 'sign' en los parámetros firmados)
+            sign = generate_signature (config_settings.BYBIT_API_SECRET, params)
+
+            # Añadir apiKey y sign a los parámetros para la solicitud
+            params ["apiKey"] = config_settings.BYBIT_API_KEY
+            params ["sign"] = sign
+
+            # Enviar solicitud a Bybit como JSON en el cuerpo
+            url = f"{BASE_URL}/v5/order/create"
+            headers = {
+                "Content-Type": "application/json"
+            }
+            async with aiohttp.ClientSession () as session:
+                async with session.post (url, json=params, headers=headers) as response:
+                    if response.status == 200:
+                        result = await response.json ()
+                        if result.get ("retCode") == 0:
+                            logger.info (f"✅ Orden colocada con éxito: {result}")
+                            return {"success": True, "order_id": result ["result"] ["orderId"]}
+                        else:
+                            logger.error (f"❌ Error al colocar orden: {result.get ('retMsg', 'Error desconocido')}")
+                            return {"success": False, "message": result.get ('retMsg', 'Error desconocido')}
+                    else:
+                        logger.error (f"❌ Error HTTP al colocar orden: {response.status}")
+                        return {"success": False, "message": f"HTTP {response.status}"}
+        except Exception as e:
+            logger.error (f"❌ Error al colocar orden: {e}")
+            return {"success": False, "message": str (e)}
+
+    def reset_trades (self):
+        self.positions = {symbol: [] for symbol in self.symbols}
+        self.trade_id_counter = self._load_initial_trade_id ()
+        with SessionLocal () as db:
+            db.query (Trade).delete ()
+            db.commit ()
+        logger.info ("🧹 Trades reseteados")
+
+    async def _save_results (self, symbol, trade_result):
+        total_profit = 0.0
+        total_loss = 0.0
+        total_trades = 0
+        profit_by_symbol = {}
+        loss_by_symbol = {}
+
+        for symbol in self.symbols:
+            symbol_profit = sum (
+                trade ["profit_loss"] for trade in self.positions [symbol] if trade ["profit_loss"] > 0)
+            symbol_loss = sum (trade ["profit_loss"] for trade in self.positions [symbol] if trade ["profit_loss"] < 0)
+            profit_by_symbol [symbol] = round (symbol_profit, 2)
+            loss_by_symbol [symbol] = round (symbol_loss, 2)
+            total_profit += symbol_profit
+            total_loss += symbol_loss
+            total_trades += len (self.positions [symbol])
+
+        net_profit = total_profit + total_loss
+        win_rate = (len ([trade for symbol in self.symbols for trade in self.positions [symbol] if
+                          trade ["profit_loss"] > 0]) / total_trades) if total_trades > 0 else 0
+        avg_profit_per_trade = net_profit / total_trades if total_trades > 0 else 0
+
+        results = {
+            "metadata": {
+                "timestamp": datetime.now (timezone.utc).isoformat (),
+                "capital_inicial": config_settings.CAPITAL_USDT,
+                "capital_actual": self.capital,
+                "capital_final": self.capital,
+                "total_pnl": round (self.capital - config_settings.CAPITAL_USDT, 2),
+                "total_trades": total_trades,
+                "iterations": self.iterations,
+                "running": self.running
+            },
+            "summary": {
+                "total_profit": round (total_profit, 2),
+                "total_loss": round (total_loss, 2),
+                "net_profit": round (net_profit, 2),
+                "win_rate": round (win_rate * 100, 2),
+                "avg_profit_per_trade": round (avg_profit_per_trade, 2)
+            },
+            "by_symbol": {
+                symbol: {
+                    "profit": profit_by_symbol [symbol],
+                    "loss": loss_by_symbol [symbol],
+                    "net_profit": round (profit_by_symbol [symbol] + loss_by_symbol [symbol], 2),
+                    "trade_count": len (self.positions [symbol])
+                } for symbol in self.symbols
+            },
+            "trades": {symbol: trades for symbol, trades in self.positions.items ()}
+        }
+        if trade_result:
+            results ["metadata"] ["last_trade_timestamp"] = trade_result.timestamp.isoformat ()
+            results ["last_trade"] = {
+                "trade_id": trade_result.trade_id,
+                "timestamp": trade_result.timestamp.isoformat (),
+                "symbol": trade_result.symbol,
+                "action": trade_result.action,
+                "entry_price": trade_result.entry_price,
+                "exit_price": trade_result.exit_price,
+                "quantity": trade_result.quantity,
+                "profit_loss": trade_result.profit_loss,
+                "decision": trade_result.decision,
+                "combined": trade_result.combined,
+                "ild": trade_result.ild,
+                "egm": trade_result.egm,
+                "rol": trade_result.rol,
+                "pio": trade_result.pio,
+                "ogm": trade_result.ogm,
+                "risk_reward_ratio": trade_result.risk_reward_ratio
+            }
+
+        save_results (results, log_dir=os.path.join (os.path.dirname (__file__), '..', 'logs'))
+        logger.info (f"📊 Resultados guardados: Total PNL={round (net_profit, 2)} USDT, Capital={self.capital:.2f} USDT")
+
+    def stop (self):
+        self.running = False
+        if self.ws:
+            asyncio.create_task (self.ws.close ())
+        logger.info ("🛑 Bot detenido.")
+
+
+# FastAPI
+app = FastAPI ()
+
+# Definir bot antes de los endpoints
+bot = NertzMetalEngine ()
+
+
+# noinspection PyUnusedLocal
+@app.get("/settings")
+async def get_settings():
+    settings = {
+        symbol: {
+            "symbol": symbol,
+            "capital": bot.capital,
+            "risk_factor": config_settings.RISK_FACTOR,
+            "min_trade_size": config_settings.MIN_TRADE_SIZE,
+            "max_trade_size": config_settings.MAX_TRADE_SIZE,
+            "metrics": await get_metrics(symbol, next(get_db()))
+        } for symbol in bot.symbols
+    }
+    return settings
+
+# noinspection PyUnusedLocal
+@app.get("/market_data/{symbol}")
+async def get_market_data(symbol: str, db: Session = Depends(get_db)):
+    candles = db.query(MarketData).filter(MarketData.symbol == symbol).order_by(MarketData.timestamp.desc()).limit(5).all()
+    return {
+        "symbol": symbol,
+        "candles": [
+            {"timestamp": c.timestamp.isoformat(), "open": c.open, "high": c.high, "low": c.low,
+             "close": c.close, "volume": c.volume} for c in candles
+        ]
+    }
+
+# noinspection PyUnusedLocal
+@app.get("/ticker/{symbol}")
+async def get_ticker(symbol: str, db: Session = Depends(get_db)):
+    ticker = db.query(MarketTicker).filter(MarketTicker.symbol == symbol).order_by(MarketTicker.timestamp.desc()).first()
+    return {
+        "symbol": symbol,
+        "last_price": ticker.last_price if ticker else 0.0,
+        "volume_24h": ticker.volume_24h if ticker else 0.0,
+        "high_24h": ticker.high_24h if ticker else 0.0,
+        "low_24h": ticker.low_24h if ticker else 0.0,
+        "timestamp": ticker.timestamp.isoformat() if ticker else datetime.now(timezone.utc).isoformat()
+    }
+
+# noinspection PyUnusedLocal
+@app.get("/metrics/{symbol}")
+async def get_metrics(symbol: str, db: Session = Depends(get_db)):
+    candles = db.query(MarketData).filter(MarketData.symbol == symbol).order_by(MarketData.timestamp.desc()).limit(5).all()
+    candle_data = [{"open": c.open, "high": c.high, "low": c.low, "close": c.close, "volume": c.volume} for c in candles]
+    orderbook = bot.orderbook_data.get(symbol, {"bids": [], "asks": []})
+    ticker = bot.ticker_data.get(symbol, {"last_price": 0.0})
+    metrics = calculate_metrics(candle_data, orderbook, ticker)
+    return {
+        "symbol": symbol,
+        "metrics": metrics,
+        "timestamp": datetime.now(timezone.utc).isoformat()
+    }
+
+# noinspection PyUnusedLocal
+@app.get("/profit")
+async def get_profit(db: Session = Depends(get_db)):
+    total_profit = sum(
+        trade["profit_loss"] for symbol in bot.symbols for trade in bot.positions.get(symbol, []) if
+        trade["profit_loss"] > 0)
+    total_loss = sum(
+        trade["profit_loss"] for symbol in bot.symbols for trade in bot.positions.get(symbol, []) if
+        trade["profit_loss"] < 0)
+    total_trades = sum(len(bot.positions.get(symbol, [])) for symbol in bot.symbols)
+    return {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "capital_inicial": config_settings.CAPITAL_USDT,
+        "capital_actual": bot.capital,
+        "total_pnl": round(bot.capital - config_settings.CAPITAL_USDT, 2),
+        "total_profit": round(total_profit, 2),
+        "total_loss": round(total_loss, 2),
+        "net_profit": round(total_profit + total_loss, 2),
+        "win_rate": round((len(
+            [t for s in bot.symbols for t in bot.positions.get(s, []) if t["profit_loss"] > 0]) /
+                            (total_trades or 1)) * 100, 2),
+        "by_symbol": {
+            symbol: {
+                "profit": round(
+                    sum(t["profit_loss"] for t in bot.positions.get(symbol, []) if t["profit_loss"] > 0),
+                    2),
+                "loss": round(sum(t["profit_loss"] for t in bot.positions.get(symbol, []) if t["profit_loss"] < 0),
+                              2),
+                "net_profit": round(sum(t["profit_loss"] for t in bot.positions.get(symbol, [])), 2),
+                "trade_count": len(bot.positions.get(symbol, []))
+            } for symbol in bot.symbols
+        }
+    }
+
+# noinspection PyUnusedLocal
+@app.post("/config/update_thresholds")
+async def update_thresholds(egm_buy_threshold: float, egm_sell_threshold: float):
+    config_settings.EGM_BUY_THRESHOLD = egm_buy_threshold
+    config_settings.EGM_SELL_THRESHOLD = egm_sell_threshold
+    logger.info(f"✅ Umbrales actualizados: buy={egm_buy_threshold}, sell={egm_sell_threshold}")
+    return {"message": "Umbrales actualizados"}
+
+# noinspection PyUnusedLocal
+@app.get("/orderbook/{symbol}")
+async def get_orderbook(symbol: str, db: Session = Depends(get_db)):
+    orderbook = bot.orderbook_data.get(symbol, {"bids": [], "asks": []})
+    return {
+        "symbol": symbol,
+        "bids": orderbook["bids"],
+        "asks": orderbook["asks"],
+        "timestamp": datetime.now(timezone.utc).isoformat()
+    }
+
+# noinspection PyUnusedLocal
+@app.get("/candles/{symbol}/{limit}")
+async def get_candles(symbol: str, limit: int = 5, db: Session = Depends(get_db)):
+    candles = db.query(MarketData).filter(MarketData.symbol == symbol).order_by(MarketData.timestamp.desc()).limit(limit).all()
+    return {
+        "symbol": symbol,
+        "candles": [
+            {"timestamp": c.timestamp.isoformat(), "open": c.open, "high": c.high, "low": c.low,
+             "close": c.close, "volume": c.volume} for c in candles
+        ],
+        "timestamp": datetime.now(timezone.utc).isoformat()
+    }
+
+# noinspection PyUnusedLocal
+@app.get("/trades/{symbol}")
+async def get_trades(symbol: str, db: Session = Depends(get_db)):
+    trades = bot.positions.get(symbol, [])
+    return {
+        "symbol": symbol,
+        "trades": trades,
+        "timestamp": datetime.now(timezone.utc).isoformat()
+    }
+
+# noinspection PyUnusedLocal
+@app.get("/last_trade/{symbol}")
+async def get_last_trade(symbol: str, db: Session = Depends(get_db)):
+    trades = bot.positions.get(symbol, [])
+    return {
+        "symbol": symbol,
+        "last_trade": trades[-1] if trades else None,
+        "timestamp": datetime.now(timezone.utc).isoformat()
+    }
+
+# noinspection PyUnusedLocal
+@app.post("/execute_trade/{symbol}")
+async def execute_trade(symbol: str, db: Session = Depends(get_db)):
+    await bot._execute_trade(symbol, db)
+    return {"message": f"✅ Trade ejecutado para {symbol}", "timestamp": datetime.now(timezone.utc).isoformat()}
+
+# noinspection PyUnusedLocal
+@app.get("/config")
+async def get_config():
+    return {
+        "symbol": config_settings.SYMBOL,
+        "timeframe": config_settings.TIMEFRAME,
+        "order_type": config_settings.ORDER_TYPE,
+        "time_in_force": config_settings.TIME_IN_FORCE,
+        "orderbook_depth": config_settings.ORDERBOOK_DEPTH,
+        "use_testnet": config_settings.USE_TESTNET,
+        "capital_usdt": config_settings.CAPITAL_USDT,
+        "risk_factor": config_settings.RISK_FACTOR,
+        "min_trade_size": config_settings.MIN_TRADE_SIZE,
+        "max_trade_size": config_settings.MAX_TRADE_SIZE,
+        "fee_rate": config_settings.FEE_RATE,
+        "tp_percentage": config_settings.TP_PERCENTAGE,
+        "sl_percentage": config_settings.SL_PERCENTAGE,
+        "egm_buy_threshold": config_settings.EGM_BUY_THRESHOLD,
+        "egm_sell_threshold": config_settings.EGM_SELL_THRESHOLD,
+        "timestamp": datetime.now(timezone.utc).isoformat()
+    }
+
+# noinspection PyUnusedLocal
+@app.post("/config/update_all")
+async def update_all_config(config: dict):
+    if "capital_usdt" in config:
+        config_settings.CAPITAL_USDT = float(config["capital_usdt"]) if float(config["capital_usdt"]) > 0 else config_settings.CAPITAL_USDT
+    if "risk_factor" in config:
+        config_settings.RISK_FACTOR = max(0.0, min(1.0, float(config["risk_factor"])))
+    if "egm_buy_threshold" in config:
+        config_settings.EGM_BUY_THRESHOLD = float(config["egm_buy_threshold"])
+    if "egm_sell_threshold" in config:
+        config_settings.EGM_SELL_THRESHOLD = float(config["egm_sell_threshold"])
+    logger.info(f"✅ Configuración actualizada: {config}")
+    return {"message": "Configuración actualizada", "timestamp": datetime.now(timezone.utc).isoformat()}
+
+# noinspection PyUnusedLocal
+@app.post("/start")
+async def start_bot():
+    if not bot.running:
+        bot.running = True
+        asyncio.create_task(bot.start_async())
+        return {"message": "✅ Bot iniciado", "timestamp": datetime.now(timezone.utc).isoformat()}
+    return {"message": "⚠️ Bot ya está corriendo", "timestamp": datetime.now(timezone.utc).isoformat()}
+
+# noinspection PyUnusedLocal
+@app.post("/stop")
+async def stop_bot():
+    if bot.running:
+        bot.stop()
+        return {"message": "🛑 Bot detenido", "timestamp": datetime.now(timezone.utc).isoformat()}
+    return {"message": "⚠️ Bot ya está detenido", "timestamp": datetime.now(timezone.utc).isoformat()}
+
+# noinspection PyUnusedLocal
+@app.get("/status")
+async def get_status():
+    return {
+        "running": bot.running,
+        "iterations": bot.iterations,
+        "symbols": bot.symbols,
+        "timestamp": datetime.now(timezone.utc).isoformat()
+    }
+
+@app.get("/grok_analysis/{symbol}")
+async def get_grok_analysis(symbol: str, db: Session = Depends(get_db)):
+    candles = db.query(MarketData).filter(MarketData.symbol == symbol).order_by(MarketData.timestamp.desc()).limit(5).all()
+    candle_data = [{"open": c.open, "high": c.high, "low": c.low, "close": c.close, "volume": c.volume} for c in candles]
+    orderbook = bot.orderbook_data.get(symbol, {"bids": [], "asks": []})
+    ticker = bot.ticker_data.get(symbol, {"last_price": 0.0})
+
+    prompt = f"Analiza estos datos de trading para {symbol}: \n- Velas: {json.dumps(candle_data)}\n- Orderbook: {json.dumps(orderbook)}\n- Ticker: {json.dumps(ticker)}\nProporciona un análisis detallado y una recomendación ('buy', 'sell' o 'hold')."
+    response = bot.grok_client.sampler.sample(prompt=prompt, temperature=0.4, max_tokens=500)
+    analysis = response["choices"][0]["text"].strip()
+
+    return {"symbol": symbol, "analysis": analysis, "timestamp": datetime.now(timezone.utc).isoformat()}
+
+# noinspection PyUnusedLocal
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy" if bot.running else "unhealthy", "timestamp": datetime.now(timezone.utc).isoformat()}
+
+
+# Ejecución principal
+server = uvicorn.Server (uvicorn.Config (app, host="0.0.0.0", port=8081))
+
+
+async def main ():
+    try:
+        # Reinicia configuraciones previas del bot antes de comenzar
+        bot.reset_trades ()
+        logger.info ("🚀 Iniciando bot y servidor API...")
+
+        # Ejecuta el bot y el servidor de forma paralela
+        await asyncio.gather (bot.start_async (), server.serve ())
+
+    except Exception as e:
+        logger.error (f"❌ Error crítico en main(): {e}")
+        await server.shutdown ()
+    except KeyboardInterrupt:
+        logger.info ("🛑 Interrupción del usuario detectada.")
+        await server.shutdown ()
+        bot.stop ()
+
+
+if __name__ == "__main__":
+    asyncio.run (main ())

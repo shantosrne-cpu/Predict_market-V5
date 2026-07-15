@@ -9,7 +9,7 @@ import re
 import threading
 from dataclasses import dataclass
 from datetime import datetime, timezone
-from typing import List, Dict, Tuple, Any, Optional, Callable
+from typing import List, Dict, Tuple, Any, Optional, Callable, TypeGuard
 
 import numpy as np
 
@@ -28,7 +28,7 @@ class _TSMFormulaError(Exception):
     pass
 
 
-def _tsm_is_valid_number(x: Any) -> bool:
+def _tsm_is_valid_number(x: Any) -> TypeGuard[float]:
     if x is None:
         return False
     try:
@@ -254,8 +254,17 @@ def eval_tsm_ast(
     def _as_args(xs: List[_TSMAst]) -> List[Optional[float]]:
         return [ _eval(x) for x in xs ]
 
+    def _as_valid_numbers(xs: List[Optional[float]]) -> List[float]:
+        vals: List[float] = []
+        for x in xs:
+            if _tsm_is_valid_number(x):
+                # type checker may not narrow Optional->float here
+                assert x is not None
+                vals.append(float(x))
+        return vals
+
     def _minmax(xs: List[Optional[float]], is_min: bool) -> Optional[float]:
-        vals = [x for x in xs if _tsm_is_valid_number(x)]
+        vals = _as_valid_numbers(xs)
         if not vals:
             return None
         return float(min(vals) if is_min else max(vals))
@@ -267,7 +276,7 @@ def eval_tsm_ast(
         return None
 
     def _avg(xs: List[Optional[float]]) -> Optional[float]:
-        vals = [float(x) for x in xs if _tsm_is_valid_number(x)]
+        vals = _as_valid_numbers(xs)
         if not vals:
             return None
         return float(sum(vals) / float(len(vals)))
@@ -880,12 +889,18 @@ def calculate_metrics(candle_data: List[Dict[str, float]], orderbook_data: Dict[
         )
         combined = float(combined_z * 10.0)
 
-        formulas = ticker_data.get("formulas") or {}
-        if isinstance(formulas, str) and formulas.strip():
+        formulas_value = ticker_data.get("formulas") or {}
+        formulas: Dict[str, Any] = {}
+        if isinstance(formulas_value, str) and formulas_value.strip():
             try:
-                formulas = json.loads(formulas)
+                parsed_formulas = json.loads(formulas_value)
+                if isinstance(parsed_formulas, dict):
+                    formulas = parsed_formulas
             except Exception:
                 formulas = {}
+        elif isinstance(formulas_value, dict):
+            formulas = formulas_value
+
         ctx: Dict[str, Any] = {
             **{
                 "last_price": float(last_price),
@@ -896,6 +911,17 @@ def calculate_metrics(candle_data: List[Dict[str, float]], orderbook_data: Dict[
                 "SpreadPct": float((best_ask - best_bid) / mid) if mid > 0 else 0.0,
                 "DBMinBuyout": float(best_ask),
                 "DBMaxBuyout": float(best_bid),
+                "DBWeightedLiquidity": float(weighted_liquidity),
+                "DBAsymmetry": float(asymmetry),
+                "DBVolatility": float(volatility),
+                "DBILDRaw": float(ild_raw),
+                "DBILDZ": float(ild_z),
+                "DBROLRaw": float(rol_raw),
+                "DBROLZ": float(rol_z),
+                "DBPIORaw": float(pio_raw),
+                "DBPIOZ": float(pio_z),
+                "DBOGMRaw": float(ogm_raw),
+                "DBOGMZ": float(ogm_z),
             },
             "combined": float(combined),
             "ild": float(ild_z),

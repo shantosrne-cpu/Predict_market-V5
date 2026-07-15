@@ -2,7 +2,7 @@ import asyncio
 import json
 import random
 import time
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, Mapping, Optional, Tuple
 
 import aiohttp
 
@@ -84,9 +84,9 @@ class BybitV5Client:
         jitter = random.uniform(0.0, 0.2)
         return float(min(self.backoff_max_s, base + jitter))
 
-    def _parse_retry_after_s(self, headers: "aiohttp.typedefs.LooseHeaders") -> Optional[float]:
+    def _parse_retry_after_s(self, headers: Mapping[str, Any]) -> Optional[float]:
         try:
-            raw = headers.get("Retry-After")  # type: ignore[attr-defined]
+            raw = headers.get("Retry-After")
         except Exception:
             raw = None
         if raw is None:

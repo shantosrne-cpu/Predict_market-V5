@@ -19,8 +19,8 @@ import uvicorn
 from dotenv import load_dotenv
 from fastapi import FastAPI, Depends, Query
 from fastapi.responses import PlainTextResponse
-from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime, JSON, text
-from sqlalchemy.orm import sessionmaker, Session, declarative_base
+from sqlalchemy import create_engine, Integer, String, Float, DateTime, JSON, text
+from sqlalchemy.orm import sessionmaker, Session, declarative_base, Mapped, mapped_column
 
 # Importaciones corregidas
 from settings import ConfigSettings
@@ -35,8 +35,10 @@ from utils import (
 )
 from bybit_v5 import BybitV5Client
 
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
 # Cargar variables desde el archivo .env
-load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "..", "..", ".env"), override=True)
+load_dotenv(dotenv_path=os.path.join(PROJECT_ROOT, ".env"), override=False)
 
 # Instanciar ConfigSettings
 config = ConfigSettings()
@@ -50,8 +52,8 @@ logging.basicConfig(
 logger = logging.getLogger("NertzMetalEngine")
 
 # URL y base de datos
-BASE_URL = "https://api.bybit.com" if not config.USE_TESTNET else "https://api-testnet.bybit.com"
-WS_URL = "wss://stream.bybit.com/v5/public/spot" if not config.USE_TESTNET else "wss://stream-testnet.bybit.com/v5/public/spot"
+BASE_URL = config.REST_BASE_URL
+WS_URL = config.WS_PUBLIC_URL
 
 DATABASE_DIR = os.path.join(os.path.dirname(__file__), '..', 'data')
 os.makedirs(DATABASE_DIR, exist_ok=True)
@@ -64,100 +66,100 @@ Base = declarative_base()
 # Modelos de la base de datos
 class MarketData(Base):
     __tablename__ = "market_data"
-    id = Column(Integer, primary_key=True, index=True)
-    timestamp = Column(DateTime, index=True)
-    symbol = Column(String(10), nullable=False)
-    open = Column(Float, nullable=False, default=0.0)
-    high = Column(Float, nullable=False, default=0.0)
-    low = Column(Float, nullable=False, default=0.0)
-    close = Column(Float, nullable=False, default=0.0)
-    volume = Column(Float, nullable=False, default=0.0)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    timestamp: Mapped[datetime] = mapped_column(DateTime, index=True)
+    symbol: Mapped[str] = mapped_column(String(10), nullable=False)
+    open: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    high: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    low: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    close: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    volume: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
 
 
 class Orderbook(Base):
     __tablename__ = "orderbook"
-    id = Column(Integer, primary_key=True, index=True)
-    timestamp = Column(DateTime, nullable=False, index=True)
-    symbol = Column(String(10), nullable=False, index=True)
-    bids = Column(JSON, nullable=False)
-    asks = Column(JSON, nullable=False)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    timestamp: Mapped[datetime] = mapped_column(DateTime, nullable=False, index=True)
+    symbol: Mapped[str] = mapped_column(String(10), nullable=False, index=True)
+    bids: Mapped[list[Any]] = mapped_column(JSON, nullable=False)
+    asks: Mapped[list[Any]] = mapped_column(JSON, nullable=False)
 
 
 class MarketTicker(Base):
     __tablename__ = "market_ticker"
-    id = Column(Integer, primary_key=True, index=True)
-    timestamp = Column(DateTime, nullable=False, index=True)
-    symbol = Column(String(10), nullable=False, index=True)
-    last_price = Column(Float, nullable=False, default=0.0)
-    volume_24h = Column(Float, nullable=False, default=0.0)
-    high_24h = Column(Float, nullable=False, default=0.0)
-    low_24h = Column(Float, nullable=False, default=0.0)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    timestamp: Mapped[datetime] = mapped_column(DateTime, nullable=False, index=True)
+    symbol: Mapped[str] = mapped_column(String(10), nullable=False, index=True)
+    last_price: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    volume_24h: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    high_24h: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    low_24h: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
 
 
 class Trade(Base):
     __tablename__ = "trades"
-    id = Column(Integer, primary_key=True, index=True)
-    trade_id = Column(Integer, nullable=False, unique=True)
-    timestamp = Column(DateTime, nullable=False, index=True)
-    symbol = Column(String(10), nullable=False, index=True)
-    action = Column(String, nullable=False)
-    order_id = Column(String(80), nullable=True, index=True)
-    bybit_raw = Column(JSON, nullable=True)
-    entry_price = Column(Float, nullable=False, default=0.0)
-    exit_price = Column(Float, nullable=False, default=0.0)
-    tp_price = Column(Float, nullable=True)
-    sl_price = Column(Float, nullable=True)
-    quantity = Column(Float, nullable=False, default=0.0)
-    profit_loss = Column(Float, nullable=False, default=0.0)
-    outcome_status = Column(String(20), nullable=False, default="pending")
-    outcome_timestamp = Column(DateTime, nullable=True)
-    decision = Column(String, nullable=False)
-    combined = Column(Float, nullable=False, default=0.0)
-    ild = Column(Float, nullable=False, default=0.0)
-    egm = Column(Float, nullable=False, default=0.0)
-    rol = Column(Float, nullable=False, default=0.0)
-    pio = Column(Float, nullable=False, default=0.0)
-    ogm = Column(Float, nullable=False, default=0.0)
-    risk_reward_ratio = Column(Float, nullable=False, default=1.5)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    trade_id: Mapped[int] = mapped_column(Integer, nullable=False, unique=True)
+    timestamp: Mapped[datetime] = mapped_column(DateTime, nullable=False, index=True)
+    symbol: Mapped[str] = mapped_column(String(10), nullable=False, index=True)
+    action: Mapped[str] = mapped_column(String, nullable=False)
+    order_id: Mapped[Optional[str]] = mapped_column(String(80), nullable=True, index=True)
+    bybit_raw: Mapped[Optional[dict[str, Any]]] = mapped_column(JSON, nullable=True)
+    entry_price: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    exit_price: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    tp_price: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    sl_price: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    quantity: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    profit_loss: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    outcome_status: Mapped[str] = mapped_column(String(20), nullable=False, default="pending")
+    outcome_timestamp: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
+    decision: Mapped[str] = mapped_column(String, nullable=False)
+    combined: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    ild: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    egm: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    rol: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    pio: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    ogm: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    risk_reward_ratio: Mapped[float] = mapped_column(Float, nullable=False, default=1.5)
 
 
 class MetricSnapshot(Base):
     __tablename__ = "metric_snapshots"
-    id = Column(Integer, primary_key=True, index=True)
-    timestamp = Column(DateTime, nullable=False, index=True)
-    symbol = Column(String(10), nullable=False, index=True)
-    last_price = Column(Float, nullable=False, default=0.0)
-    decision = Column(String, nullable=False, default="hold")
-    combined = Column(Float, nullable=False, default=0.0)
-    ild = Column(Float, nullable=False, default=0.0)
-    egm = Column(Float, nullable=False, default=0.0)
-    rol = Column(Float, nullable=False, default=0.0)
-    pio = Column(Float, nullable=False, default=0.0)
-    ogm = Column(Float, nullable=False, default=0.0)
-    volatility = Column(Float, nullable=False, default=0.0)
-    thresholds = Column(JSON, nullable=False, default=dict)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    timestamp: Mapped[datetime] = mapped_column(DateTime, nullable=False, index=True)
+    symbol: Mapped[str] = mapped_column(String(10), nullable=False, index=True)
+    last_price: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    decision: Mapped[str] = mapped_column(String, nullable=False, default="hold")
+    combined: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    ild: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    egm: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    rol: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    pio: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    ogm: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    volatility: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    thresholds: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False, default=dict)
 
 
 class BalanceSnapshot(Base):
     __tablename__ = "balance_snapshots"
-    id = Column(Integer, primary_key=True, index=True)
-    timestamp = Column(DateTime, nullable=False, index=True)
-    account_type = Column(String(20), nullable=False, default="UNIFIED")
-    coin = Column(String(20), nullable=True)
-    total_equity = Column(Float, nullable=False, default=0.0)
-    available_balance = Column(Float, nullable=False, default=0.0)
-    raw = Column(JSON, nullable=False, default=dict)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    timestamp: Mapped[datetime] = mapped_column(DateTime, nullable=False, index=True)
+    account_type: Mapped[str] = mapped_column(String(20), nullable=False, default="UNIFIED")
+    coin: Mapped[Optional[str]] = mapped_column(String(20), nullable=True)
+    total_equity: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    available_balance: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    raw: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False, default=dict)
 
 
 class ThresholdSnapshot(Base):
     __tablename__ = "threshold_snapshots"
-    id = Column(Integer, primary_key=True, index=True)
-    timestamp = Column(DateTime, nullable=False, index=True)
-    egm_buy_threshold = Column(Float, nullable=False)
-    egm_sell_threshold = Column(Float, nullable=False)
-    combined_buy_threshold = Column(Float, nullable=False)
-    combined_sell_threshold = Column(Float, nullable=False)
-    stats = Column(JSON, nullable=False, default=dict)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    timestamp: Mapped[datetime] = mapped_column(DateTime, nullable=False, index=True)
+    egm_buy_threshold: Mapped[float] = mapped_column(Float, nullable=False)
+    egm_sell_threshold: Mapped[float] = mapped_column(Float, nullable=False)
+    combined_buy_threshold: Mapped[float] = mapped_column(Float, nullable=False)
+    combined_sell_threshold: Mapped[float] = mapped_column(Float, nullable=False)
+    stats: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False, default=dict)
 
 
 Base.metadata.create_all(bind=engine)
@@ -553,8 +555,8 @@ class NertzMetalEngine:
             status = self._normalize_outcome_status(getattr(t, "outcome_status", None))
             if status == "final":
                 continue
-            entry = float(t.entry_price or 0.0)
-            qty = float(t.quantity or 0.0)
+            entry = float(getattr(t, "entry_price", 0.0) or 0.0)
+            qty = float(getattr(t, "quantity", 0.0) or 0.0)
             raw = getattr(t, "bybit_raw", None)
             if isinstance(raw, dict):
                 order_info = raw.get("order_realtime") or raw.get("order_history") or {}
@@ -619,7 +621,7 @@ class NertzMetalEngine:
                     "quantity": t.quantity,
                     "profit_loss": (t.profit_loss if (getattr(t, "outcome_status", None) == "final") else None),
                     "outcome_status": getattr(t, "outcome_status", None) or "legacy",
-                    "outcome_timestamp": t.outcome_timestamp.isoformat() if getattr(t, "outcome_timestamp", None) else None,
+                    "outcome_timestamp": t.outcome_timestamp.isoformat() if isinstance(t.outcome_timestamp, datetime) else None,
                     "decision": t.decision,
                     "combined": t.combined,
                     "ild": t.ild,
@@ -724,53 +726,13 @@ class NertzMetalEngine:
         await self._connect_websocket_async()
 
     async def preflight(self) -> Dict[str, Any]:
-        mode = "paper" if bool(getattr(config, "PAPER_TRADING", False)) else ("live" if bool(getattr(config, "LIVE_TRADING_ENABLED", False)) else "disabled")
-
-        if mode != "live":
-            return {"success": True, "mode": mode}
-
-        client = self._bybit_client()
-        if client is None:
-            return {"success": False, "mode": mode, "message": "Credenciales BYBIT_API_KEY/BYBIT_API_SECRET no configuradas"}
-
-        time_payload = await client.get_server_time()
-        if time_payload.get("retCode") != 0:
-            return {"success": False, "mode": mode, "message": time_payload.get("retMsg") or "server_time_failed", "raw": time_payload}
-
-        drift_s = None
-        try:
-            result = time_payload.get("result") or {}
-            server_s = float(result.get("timeSecond") or 0.0)
-            if server_s > 0:
-                drift_s = abs(time.time() - server_s)
-        except Exception:
-            drift_s = None
-
-        if drift_s is not None and drift_s > 10.0:
-            return {"success": False, "mode": mode, "message": f"Deriva de reloj alta ({drift_s:.2f}s). Sincroniza tu hora local."}
-
-        balance = await self.record_balance(account_type="UNIFIED", coin="USDT")
-        if not balance.get("success"):
-            return {"success": False, "mode": mode, "message": balance.get("message") or "wallet_balance_failed", "raw": balance}
-
-        if isinstance(balance.get("balance"), dict):
-            try:
-                total = float(balance["balance"].get("total_equity") or 0.0)
-                avail = float(balance["balance"].get("available_balance") or 0.0)
-                if total > 0:
-                    self.capital = total
-                elif avail > 0:
-                    self.capital = avail
-            except Exception:
-                pass
-
-        for sym in self.symbols:
-            try:
-                await self._get_instrument_rules(sym)
-            except Exception:
-                pass
-
-        return {"success": True, "mode": mode, "drift_s": drift_s}
+        return {
+            "success": True,
+            "trading_env": config.TRADING_ENV,
+            "rest_base_url": config.REST_BASE_URL,
+            "ws_public_url": config.WS_PUBLIC_URL,
+            "credentials_configured": bool(config.BYBIT_API_KEY and config.BYBIT_API_SECRET),
+        }
 
     async def _connect_websocket_async(self):
         import websockets
@@ -1020,6 +982,27 @@ class NertzMetalEngine:
             logger.error(f"❌ Error inesperado en _handle_ticker para {symbol}: {type(e).__name__} - {str(e)}")
 
     @staticmethod
+    def _classify_market_regime(metrics: Dict[str, Any], history: Optional[list[Dict[str, Any]]] = None) -> str:
+        combined = float(metrics.get("combined", 0.0) or 0.0)
+        volatility = float(metrics.get("volatility", 0.0) or 0.0)
+        pio = float(metrics.get("pio", 0.0) or 0.0)
+        egm = float(metrics.get("egm", 0.0) or 0.0)
+
+        hist = history or []
+        if isinstance(hist, list) and hist:
+            try:
+                recent_vol = float(max(abs(float(item.get("volatility", 0.0) or 0.0)) for item in hist if isinstance(item, dict)))
+                volatility = max(volatility, recent_vol)
+            except Exception:
+                pass
+
+        if abs(combined) >= 10.0 or volatility >= 0.01 or abs(pio) >= 1.5 or abs(egm) >= 1.5:
+            return "volatile"
+        if abs(combined) >= 3.0 or volatility >= 0.003 or abs(pio) >= 0.5 or abs(egm) >= 0.5:
+            return "normal"
+        return "calm"
+
+    @staticmethod
     def _determine_decision(symbol: str, metrics: Dict) -> str:
         egm = float(metrics.get("egm", 0.0) or 0.0)
         pio = float(metrics.get("pio", 0.0) or 0.0)
@@ -1029,6 +1012,21 @@ class NertzMetalEngine:
         hold_band = float(getattr(config, "COMBINED_HOLD_BAND", 12.0) or 12.0)
 
         volatility = float(metrics.get("volatility", 0.0) or 0.0)
+        regime = NertzMetalEngine._classify_market_regime(metrics, metrics.get("history") if isinstance(metrics, dict) else None)
+
+        if regime == "calm":
+            buy_th = max(buy_th * 0.7, 2.0)
+            sell_th = min(sell_th * 0.7, -2.0)
+            hold_band = max(hold_band * 0.6, 1.0)
+        elif regime == "volatile":
+            buy_th = max(buy_th * 1.15, 3.0)
+            sell_th = min(sell_th * 1.15, -3.0)
+            hold_band = max(hold_band * 1.2, 1.5)
+        else:
+            buy_th = max(buy_th * 0.9, 2.5)
+            sell_th = min(sell_th * 0.9, -2.5)
+            hold_band = max(hold_band * 0.8, 1.2)
+
         if volatility > 0:
             base_vol = 0.01
             if volatility < base_vol:
@@ -1215,7 +1213,7 @@ class NertzMetalEngine:
 
         return targets
 
-    def _apply_threshold_update(self, targets: Dict[str, float], alpha: float = 0.1) -> Dict[str, float]:
+    def _apply_threshold_update(self, targets: Dict[str, float], alpha: float = 0.1) -> Dict[str, Dict[str, float]]:
         before = self._thresholds_payload()
         if "egm_buy_threshold" in targets:
             config.EGM_BUY_THRESHOLD = (1 - alpha) * float(config.EGM_BUY_THRESHOLD) + alpha * float(targets["egm_buy_threshold"])
@@ -1314,8 +1312,6 @@ class NertzMetalEngine:
             return {"success": False, "message": str(e)}
 
     async def cancel_all_open_orders(self, symbol: Optional[str] = None, limit: int = 200) -> Dict[str, Any]:
-        if bool(getattr(config, "PAPER_TRADING", False)) or not bool(getattr(config, "LIVE_TRADING_ENABLED", False)):
-            return {"success": True, "skipped": True, "mode": "paper" if bool(getattr(config, "PAPER_TRADING", False)) else "disabled", "seen": 0, "cancelled": 0, "failed": 0, "failures": []}
         client = self._bybit_client()
         if client is None:
             return {"success": False, "message": "Credenciales BYBIT_API_KEY/BYBIT_API_SECRET no configuradas"}
@@ -1517,7 +1513,7 @@ class NertzMetalEngine:
                         prev_liq = prev_entry[0]
                         prev_ts = prev_entry[1]
 
-                    ticker_payload = dict(ticker)
+                    ticker_payload: dict[str, Any] = dict(ticker)
                     ticker_payload["orderbook_lambda"] = float(getattr(config, "ORDERBOOK_LAMBDA", 0.03) or 0.03)
                     ticker_payload["orderbook_pct_band"] = float(getattr(config, "ORDERBOOK_PCT_BAND", 0.015) or 0.015)
                     ticker_payload["ild_target_move"] = float(getattr(config, "ILD_TARGET_MOVE", 0.002) or 0.002)
@@ -1831,8 +1827,6 @@ class NertzMetalEngine:
         update_after_seconds: float = 20.0,
         limit: int = 100,
     ) -> Dict[str, Any]:
-        if bool(getattr(config, "PAPER_TRADING", False)) or not bool(getattr(config, "LIVE_TRADING_ENABLED", False)):
-            return {"success": True, "results": {"skipped": 1, "mode": "paper" if bool(getattr(config, "PAPER_TRADING", False)) else "disabled"}}
         client = self._bybit_client()
         if client is None:
             return {"success": False, "message": "Credenciales BYBIT_API_KEY/BYBIT_API_SECRET no configuradas"}
@@ -2147,9 +2141,6 @@ class NertzMetalEngine:
         bybit_order: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         try:
-            if bool(getattr(config, "PAPER_TRADING", False)) or not bool(getattr(config, "LIVE_TRADING_ENABLED", False)):
-                return {"success": True, "old_order_id": order_id, "new_order_id": "", "raw": {"skipped": True, "mode": "paper" if bool(getattr(config, "PAPER_TRADING", False)) else "disabled"}}
-
             client = self._bybit_client()
             if client is None:
                 return {"success": False, "message": "Credenciales BYBIT_API_KEY/BYBIT_API_SECRET no configuradas"}
@@ -2243,44 +2234,14 @@ class NertzMetalEngine:
             return {"success": False, "message": str(e)}
 
     def _bybit_client(self) -> Optional[BybitV5Client]:
-        if bool(getattr(config, "PAPER_TRADING", False)) or not bool(getattr(config, "LIVE_TRADING_ENABLED", False)):
-            return None
         if not config.BYBIT_API_KEY or not config.BYBIT_API_SECRET:
             return None
         if self._bybit is not None:
             return self._bybit
-        base_url = "https://api.bybit.com" if not config.USE_TESTNET else "https://api-testnet.bybit.com"
-        self._bybit = BybitV5Client(config.BYBIT_API_KEY, config.BYBIT_API_SECRET, base_url=base_url)
+        self._bybit = BybitV5Client(config.BYBIT_API_KEY, config.BYBIT_API_SECRET, base_url=config.REST_BASE_URL)
         return self._bybit
 
     async def record_balance(self, account_type: str = "UNIFIED", coin: Optional[str] = "USDT") -> Dict[str, Any]:
-        if bool(getattr(config, "PAPER_TRADING", False)) or not bool(getattr(config, "LIVE_TRADING_ENABLED", False)):
-            total_equity = float(self.capital or 0.0)
-            available_balance = float(self.capital or 0.0)
-            payload = {"mode": "paper" if bool(getattr(config, "PAPER_TRADING", False)) else "disabled", "coin": coin, "accountType": account_type}
-            with SessionLocal() as db:
-                snap = BalanceSnapshot(
-                    timestamp=datetime.now(timezone.utc),
-                    account_type=account_type,
-                    coin=coin,
-                    total_equity=total_equity,
-                    available_balance=available_balance,
-                    raw=payload,
-                )
-                db.add(snap)
-                db.commit()
-            append_results_event(
-                {
-                    "type": "balance",
-                    "account_type": account_type,
-                    "coin": coin,
-                    "total_equity": total_equity,
-                    "available_balance": available_balance,
-                    "mode": payload.get("mode"),
-                },
-                log_dir=os.path.join(os.path.dirname(__file__), '..', 'logs'),
-            )
-            return {"success": True, "balance": {"total_equity": total_equity, "available_balance": available_balance}, "raw": payload}
         client = self._bybit_client()
         if client is None:
             return {"success": False, "message": "Credenciales BYBIT_API_KEY/BYBIT_API_SECRET no configuradas"}
@@ -2329,32 +2290,6 @@ class NertzMetalEngine:
 
     async def _place_order(self, symbol: str, action: str, quantity: float, price: float, tp: float,
                            sl: float) -> Dict:
-        if bool(getattr(config, "PAPER_TRADING", False)) or not bool(getattr(config, "LIVE_TRADING_ENABLED", False)):
-            order_link_id = f"nertzh-{uuid.uuid4().hex[:20]}"
-            order_id = f"paper-{uuid.uuid4().hex}"
-            fee = float(quantity) * float(price) * float(getattr(config, "FEE_RATE", 0.0) or 0.0)
-            return {
-                "success": True,
-                "order_id": order_id,
-                "order_link_id": order_link_id,
-                "raw": {
-                    "mode": "paper" if bool(getattr(config, "PAPER_TRADING", False)) else "disabled",
-                    "retCode": 0,
-                    "retMsg": "OK",
-                    "result": {"orderId": order_id, "orderLinkId": order_link_id},
-                    "order_realtime": {
-                        "orderId": order_id,
-                        "orderLinkId": order_link_id,
-                        "symbol": symbol,
-                        "side": "Buy" if action.lower() == "buy" else "Sell",
-                        "orderType": str(getattr(config, "ORDER_TYPE", "Limit")),
-                        "orderStatus": "Filled",
-                        "avgPrice": str(price),
-                        "cumExecQty": str(quantity),
-                        "cumExecFee": str(fee),
-                    },
-                },
-            }
         max_retries = 3
         for attempt in range(max_retries):
             try:
@@ -2512,7 +2447,7 @@ class NertzMetalEngine:
                     "quantity": float(t.quantity),
                     "profit_loss": float(t.profit_loss) if is_final else None,
                     "outcome_status": outcome_status,
-                    "outcome_timestamp": t.outcome_timestamp.isoformat() if getattr(t, "outcome_timestamp", None) else None,
+                    "outcome_timestamp": t.outcome_timestamp.isoformat() if isinstance(t.outcome_timestamp, datetime) else None,
                     "bybit_raw": getattr(t, "bybit_raw", None),
                     "decision": t.decision,
                     "combined": float(t.combined),
@@ -2550,7 +2485,7 @@ class NertzMetalEngine:
         previous = load_results_json(log_dir=log_dir)
         prev_initial = (previous.get("metadata") or {}).get("capital_inicial")
 
-        capital_source = "simulated"
+        capital_source = "configured_capital"
         capital_actual = float(self.capital)
         balance_meta: Dict[str, Any] = {}
         if latest_balance and (latest_balance.total_equity or 0.0) > 0:
@@ -2609,7 +2544,7 @@ class NertzMetalEngine:
                 "quantity": trade_result.quantity,
                 "profit_loss": trade_result.profit_loss if is_final else None,
                 "outcome_status": outcome_status,
-                "outcome_timestamp": trade_result.outcome_timestamp.isoformat() if getattr(trade_result, "outcome_timestamp", None) else None,
+                "outcome_timestamp": trade_result.outcome_timestamp.isoformat() if isinstance(trade_result.outcome_timestamp, datetime) else None,
                 "bybit_raw": getattr(trade_result, "bybit_raw", None),
                 "decision": trade_result.decision,
                 "combined": trade_result.combined,
@@ -2728,7 +2663,7 @@ async def ml_dataset_trades(
                 "ogm": float(t.ogm or 0.0),
                 "risk_reward_ratio": float(getattr(t, "risk_reward_ratio", 0.0) or 0.0),
                 "outcome_status": getattr(t, "outcome_status", None),
-                "outcome_timestamp": t.outcome_timestamp.isoformat() if getattr(t, "outcome_timestamp", None) else None,
+                "outcome_timestamp": t.outcome_timestamp.isoformat() if isinstance(t.outcome_timestamp, datetime) else None,
             }
         )
 
@@ -2849,7 +2784,7 @@ async def get_metrics(symbol: str, db: Session = Depends(get_db)):
         prev_liq = prev_entry[0]
         prev_ts = prev_entry[1]
 
-    ticker_payload = dict(ticker)
+    ticker_payload: dict[str, Any] = dict(ticker)
     ticker_payload["orderbook_lambda"] = float(getattr(config, "ORDERBOOK_LAMBDA", 0.03) or 0.03)
     ticker_payload["orderbook_pct_band"] = float(getattr(config, "ORDERBOOK_PCT_BAND", 0.015) or 0.015)
     ticker_payload["ild_target_move"] = float(getattr(config, "ILD_TARGET_MOVE", 0.002) or 0.002)
@@ -2999,7 +2934,7 @@ async def get_profit(db: Session = Depends(get_db)):
     previous = load_results_json(log_dir=log_dir)
     prev_initial = (previous.get("metadata") or {}).get("capital_inicial")
 
-    capital_source = "simulated"
+    capital_source = "configured_capital"
     capital_actual = float(bot.capital)
     if latest_balance and (latest_balance.total_equity or 0.0) > 0:
         capital_source = "bybit_wallet_balance"
@@ -3094,7 +3029,7 @@ async def get_last_trade(symbol: str, db: Session = Depends(get_db)):
                 "profit_loss": float(last.profit_loss) if is_final else None,
                 "order_id": getattr(last, "order_id", None),
                 "outcome_status": outcome_status,
-                "outcome_timestamp": last.outcome_timestamp.isoformat() if getattr(last, "outcome_timestamp", None) else None,
+                "outcome_timestamp": last.outcome_timestamp.isoformat() if isinstance(last.outcome_timestamp, datetime) else None,
                 "decision": last.decision,
                 "combined": float(last.combined),
                 "ild": float(last.ild),
@@ -3178,9 +3113,10 @@ async def get_config():
         "order_type": config.ORDER_TYPE,
         "time_in_force": config.TIME_IN_FORCE,
         "orderbook_depth": config.ORDERBOOK_DEPTH,
-        "use_testnet": config.USE_TESTNET,
-        "paper_trading": bool(getattr(config, "PAPER_TRADING", False)),
-        "live_trading_enabled": bool(getattr(config, "LIVE_TRADING_ENABLED", False)),
+        "trading_env": config.TRADING_ENV,
+        "rest_base_url": config.REST_BASE_URL,
+        "ws_public_url": config.WS_PUBLIC_URL,
+        "credentials_configured": bool(config.BYBIT_API_KEY and config.BYBIT_API_SECRET),
         "capital_usdt": config.CAPITAL_USDT,
         "risk_factor": config.RISK_FACTOR,
         "min_trade_size": config.MIN_TRADE_SIZE,
@@ -3223,16 +3159,17 @@ async def admin_full_reset(
     db: Session = Depends(get_db),
 ):
     calibrate = bot.force_calibrate_thresholds(db, sample_size=int(sample_size), alpha=float(alpha))
-    env_update = _persist_thresholds_to_env(os.path.join(os.path.dirname(__file__), "..", "..", ".env"))
+    env_update = _persist_thresholds_to_env(os.path.join(PROJECT_ROOT, ".env"))
 
     cancel_result = None
     if bool(cancel_bybit_orders):
         cancel_result = await bot.cancel_all_open_orders(symbol=None, limit=200)
 
     bot.stop()
-    if getattr(bot, "_support_task", None) is not None and not bot._support_task.done():
+    support_task = getattr(bot, "_support_task", None)
+    if support_task is not None and not support_task.done():
         try:
-            bot._support_task.cancel()
+            support_task.cancel()
         except Exception:
             pass
 
@@ -3275,11 +3212,12 @@ async def stop_bot():
 
 @app.get("/status")
 async def get_status():
+    support_task = getattr(bot, "_support_task", None)
     return {
         "running": bot.running,
         "iterations": bot.iterations,
         "symbols": bot.symbols,
-        "support_loop_running": bool(getattr(bot, "_support_task", None) and not bot._support_task.done()),
+        "support_loop_running": bool(support_task is not None and not support_task.done()),
         "timestamp": datetime.now(timezone.utc).isoformat()
     }
 

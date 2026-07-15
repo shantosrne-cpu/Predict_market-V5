@@ -7,6 +7,7 @@ logger = logging.getLogger("NertzMetalEngine")
 
 class ConfigSettings:
     # Class Constants
+    VALID_TRADING_ENVS = ["demo", "mainnet"]
     VALID_SYMBOLS = ["BTCUSDT", "ETHUSDT", "XRPUSDT"]
     VALID_TIMEFRAMES = ["1m", "5m", "15m", "1h", "4h", "1d"]
     VALID_ORDERBOOK_DEPTHS = [1, 5, 10, 25, 50]
@@ -19,14 +20,16 @@ class ConfigSettings:
             # Load variables from environment
             self.BYBIT_API_KEY = self._get_env("BYBIT_API_KEY")
             self.BYBIT_API_SECRET = self._get_env("BYBIT_API_SECRET")
-            self.USE_TESTNET = self._get_env_bool("USE_TESTNET", default=True)
-            self.LIVE_TRADING_ENABLED = self._get_env_bool("LIVE_TRADING_ENABLED", default=False)
-            self.PAPER_TRADING = self._get_env_bool("PAPER_TRADING", default=False)
-            self.ALLOW_TESTNET_LIVE = self._get_env_bool("ALLOW_TESTNET_LIVE", default=False)
-            if self.LIVE_TRADING_ENABLED and self.PAPER_TRADING:
-                raise ValueError("LIVE_TRADING_ENABLED=True no puede usarse con PAPER_TRADING=True")
-            if self.LIVE_TRADING_ENABLED and self.USE_TESTNET and not self.ALLOW_TESTNET_LIVE:
-                raise ValueError("LIVE_TRADING_ENABLED=True no puede usarse con USE_TESTNET=True")
+            self.TRADING_ENV = self._get_env_with_validation(
+                "TRADING_ENV", "demo", self.__class__.VALID_TRADING_ENVS
+            )
+            if self.TRADING_ENV == "demo":
+                self.REST_BASE_URL = "https://api-demo.bybit.com"
+                # Public market streams always use the main Bybit public websocket endpoint.
+                self.WS_PUBLIC_URL = "wss://stream.bybit.com/v5/public/spot"
+            else:
+                self.REST_BASE_URL = "https://api.bybit.com"
+                self.WS_PUBLIC_URL = "wss://stream.bybit.com/v5/public/spot"
 
             # Validated and defaulted attributes
             self.SYMBOL = self._get_env_symbols("SYMBOL", "BTCUSDT", self.__class__.VALID_SYMBOLS)
@@ -41,6 +44,7 @@ class ConfigSettings:
             # Numeric parameters
             self.MAX_ITERATIONS = self._get_env_int("MAX_ITERATIONS", default=0, positive=True)
             self.DEFAULT_SLEEP_TIME = self._get_env_int("DEFAULT_SLEEP_TIME", default=10, positive=True)
+            self.CAPITAL_USDT = self._get_env_float("CAPITAL_USDT", default=1000.0, positive=True)
             self.VOLUME_THRESHOLD = self._get_env_float("VOLUME_THRESHOLD", default=1.0, positive=True)
             self.RISK_FACTOR = self._get_env_clamped_float("RISK_FACTOR", default=0.01, min_value=0.0, max_value=1.0)
             self.MAX_TRADE_SIZE = self._get_env_clamped_float("MAX_TRADE_SIZE", default=0.05, min_value=0.0,
@@ -58,11 +62,11 @@ class ConfigSettings:
                                                                      max_value=100.0)
             self.RATE_LIMIT_DELAY = self._get_env_int("RATE_LIMIT_DELAY", default=50, positive=True)
             self.PIO_THRESHOLD = self._get_env_float("PIO_THRESHOLD", default=0.0)
-            self.EGM_BUY_THRESHOLD = self._get_env_float("EGM_BUY_THRESHOLD", default=0.02)
-            self.EGM_SELL_THRESHOLD = self._get_env_float("EGM_SELL_THRESHOLD", default=-0.02)
-            self.COMBINED_BUY_THRESHOLD = self._get_env_float("COMBINED_BUY_THRESHOLD", default=25.0)
-            self.COMBINED_SELL_THRESHOLD = self._get_env_float("COMBINED_SELL_THRESHOLD", default=-25.0)
-            self.COMBINED_HOLD_BAND = self._get_env_float("COMBINED_HOLD_BAND", default=12.0, positive=True)
+            self.EGM_BUY_THRESHOLD = self._get_env_float("EGM_BUY_THRESHOLD", default=0.01)
+            self.EGM_SELL_THRESHOLD = self._get_env_float("EGM_SELL_THRESHOLD", default=-0.01)
+            self.COMBINED_BUY_THRESHOLD = self._get_env_float("COMBINED_BUY_THRESHOLD", default=5.0)
+            self.COMBINED_SELL_THRESHOLD = self._get_env_float("COMBINED_SELL_THRESHOLD", default=-5.0)
+            self.COMBINED_HOLD_BAND = self._get_env_float("COMBINED_HOLD_BAND", default=2.0, positive=True)
             self.ORDERBOOK_LAMBDA = self._get_env_float("ORDERBOOK_LAMBDA", default=0.03, positive=True)
             self.ORDERBOOK_PCT_BAND = self._get_env_clamped_float("ORDERBOOK_PCT_BAND", default=0.015, min_value=0.0, max_value=0.25)
             self.ILD_TARGET_MOVE = self._get_env_clamped_float("ILD_TARGET_MOVE", default=0.002, min_value=0.0001, max_value=0.05)
@@ -154,8 +158,8 @@ class ConfigSettings:
     def _log_config(self) -> None:
         """Log the loaded configuration."""
         logger.info("✅ Configuration loaded:")
-        logger.info(f"  - SYMBOL: {self.SYMBOL}, TIMEFRAME: {self.TIMEFRAME}, ORDER_TYPE: {self.ORDER_TYPE}")
+        logger.info(f"  - TRADING_ENV: {self.TRADING_ENV}, SYMBOL: {self.SYMBOL}, TIMEFRAME: {self.TIMEFRAME}, ORDER_TYPE: {self.ORDER_TYPE}")
         api_key_status = "SET" if self.BYBIT_API_KEY else "NOT_SET"
         logger.info(
-            f"  - USE_TESTNET: {self.USE_TESTNET}, PAPER_TRADING: {self.PAPER_TRADING}, LIVE_TRADING_ENABLED: {self.LIVE_TRADING_ENABLED}, BYBIT_API_KEY: {api_key_status}"
+            f"  - REST_BASE_URL: {self.REST_BASE_URL}, BYBIT_API_KEY: {api_key_status}"
         )

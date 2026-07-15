@@ -18,6 +18,17 @@ Nertz Metal Engine runs a FastAPI backend that connects to Bybit V5, ingests liv
 
 For hackathon demos, it is designed to run against Bybit Demo Trading via `TRADING_ENV=demo`. Mainnet requires explicitly setting `TRADING_ENV=mainnet`.
 
+## Build Week strategy
+
+While the hackathon is running, the project will continue evolving in short, judge-friendly iterations:
+
+- keep the demo experience simple and reproducible,
+- improve the clarity of the signal outputs and metric explanations,
+- add stronger safety checks and automated tests,
+- keep the repository and Devpost materials aligned with the latest progress.
+
+This is a practical AI-assisted builder workflow: a real backend, real exchange integration, and a polished path for judging and future extension.
+
 ## How we built it
 
 - Python and FastAPI for the API surface.

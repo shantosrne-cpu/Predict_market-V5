@@ -25,6 +25,16 @@ Crypto markets move quickly and are often too noisy to interpret manually. This 
 - API-first architecture designed for judges, demos, and future automation
 - Reproducible local setup with clear documentation
 
+## Devpost and Build Week focus
+
+This project is being prepared for the OpenAI Build Week / Devpost experience and kept active while the contest is ongoing. The next improvements will focus on three practical goals:
+
+- make the demo flow clearer and faster for judges,
+- add a richer explanation layer for each signal using the available AI tools,
+- keep the repository and submission materials updated as the project evolves.
+
+The repo remains the single source of truth for the implementation, setup, and live demo story.
+
 ## Tech stack
 
 - Python

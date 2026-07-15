@@ -27,6 +27,15 @@ Nertz Metal Engine is a production-style FastAPI service for real-time crypto ma
 - Added the missing `CAPITAL_USDT` setting used by configuration and API responses.
 - Replaced placeholder ignore rules with a cleaner Python/runtime/secret-aware `.gitignore`.
 
+## Hackathon development plan
+
+During the contest, the project will continue to improve in small steps that matter for judging:
+
+- strengthen the demo narrative and make the API flow easier to present,
+- add clearer AI-generated signal explanations and risk context,
+- improve automated coverage around metrics and execution gates,
+- keep the repository documentation current as new tools become available.
+
 ## Known limitations
 
 - This is an API-first backend rather than a polished front-end dashboard.

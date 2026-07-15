@@ -12,17 +12,17 @@ A real-time crypto market intelligence engine that turns Bybit orderbook, ticker
 
 Nertz Metal Engine is an API-first crypto intelligence platform built for fast-moving markets. It connects to Bybit V5, ingests live market data, stores telemetry for inspection, computes decision metrics, and exposes a transparent execution path that can run in collect-only mode for safe demos. The project is designed for the OpenAI Build Week challenge as a practical, real-world AI-assisted builder workflow that combines backend engineering, exchange integration, and judge-friendly documentation.
 
-## Suggested Devpost description
+## Final Devpost description
 
-Nertz Metal Engine helps make crypto market activity understandable and reproducible. Instead of relying on scattered charts or manual analysis, it turns live exchange data into structured signals, persistent history, and inspectable API outputs. This makes it useful for demos, validation, and future AI-assisted decision support, while keeping the execution path guarded and safe for testing.
+Nertz Metal Engine turns live crypto market activity into structured, inspectable signals. Built with FastAPI, Bybit V5, SQLite, and Python, it ingests order book, ticker, candle, and trade data, stores it for auditability, and exposes a clear API for validation, metrics, and safe demo execution. The project is designed to be practical for real-world experimentation, hackathon demos, and future AI-assisted decision support while keeping the execution path guarded and transparent.
 
-## Demo video outline
+## Final video script
 
-1. Open the repository and show the main architecture: FastAPI backend, Bybit integration, SQLite persistence, and the metrics layer.
-2. Start the API locally and show the health and validation endpoints.
-3. Display real market data through the metrics and orderbook endpoints.
-4. Run a collect-only execution cycle and show the resulting profit or trade telemetry.
-5. Close by explaining the next iteration: clearer AI-generated signal explanations, stronger test coverage, and a more polished demo experience.
+0:00-0:10 — Introduce the project as a real-time crypto market intelligence engine.
+0:10-0:25 — Show the architecture: FastAPI backend, Bybit V5 integration, SQLite persistence, and the metrics layer.
+0:25-0:45 — Demonstrate the API endpoints for health, validation, market data, and metrics.
+0:45-1:05 — Run a collect-only execution flow and show the resulting telemetry and safe demo behavior.
+1:05-1:20 — Close by highlighting the project’s value for judges, demos, and future AI-assisted explanation layers.
 
 ## Submission checklist
 

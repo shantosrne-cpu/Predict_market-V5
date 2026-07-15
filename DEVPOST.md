@@ -8,6 +8,30 @@ Nertz Metal Engine
 
 A real-time crypto market intelligence engine that turns Bybit orderbook, ticker, candle, and trade flow into auditable trading signals across Bybit Demo Trading and mainnet.
 
+## Submission-ready summary
+
+Nertz Metal Engine is an API-first crypto intelligence platform built for fast-moving markets. It connects to Bybit V5, ingests live market data, stores telemetry for inspection, computes decision metrics, and exposes a transparent execution path that can run in collect-only mode for safe demos. The project is designed for the OpenAI Build Week challenge as a practical, real-world AI-assisted builder workflow that combines backend engineering, exchange integration, and judge-friendly documentation.
+
+## Suggested Devpost description
+
+Nertz Metal Engine helps make crypto market activity understandable and reproducible. Instead of relying on scattered charts or manual analysis, it turns live exchange data into structured signals, persistent history, and inspectable API outputs. This makes it useful for demos, validation, and future AI-assisted decision support, while keeping the execution path guarded and safe for testing.
+
+## Demo video outline
+
+1. Open the repository and show the main architecture: FastAPI backend, Bybit integration, SQLite persistence, and the metrics layer.
+2. Start the API locally and show the health and validation endpoints.
+3. Display real market data through the metrics and orderbook endpoints.
+4. Run a collect-only execution cycle and show the resulting profit or trade telemetry.
+5. Close by explaining the next iteration: clearer AI-generated signal explanations, stronger test coverage, and a more polished demo experience.
+
+## Submission checklist
+
+- Public repository link ready.
+- Short project description prepared in English.
+- Demo video uploaded or prepared for submission.
+- Setup steps clearly documented in the repository.
+- Safe demo flow available with collect-only execution.
+
 ## Inspiration
 
 Fast-moving crypto markets are hard to inspect manually. The project focuses on a practical problem: giving a solo trader or builder a transparent, API-first system that can collect market microstructure data, calculate decision metrics, and expose the reasoning trail before any automated action is allowed.
